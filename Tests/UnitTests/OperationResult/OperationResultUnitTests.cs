@@ -157,6 +157,31 @@ public class OperationResultUnitTests {
         Assert.Equal(exception.Message, error.Message);
     }
 
+    [Fact]
+    public void OnSuccess_Should_Invoke_Action_If_Success()
+    {
+        var result = Result.Success();
+        var actionInvoked = false;
+        result.OnSuccess(() => actionInvoked = true);
+        Assert.True(actionInvoked);
+    }
 
+    [Fact]
+    public void OnSuccess_Should_Not_Invoke_Action_If_Failure()
+    {
+        var result = Result.Fail(Error.BadRequest);
+        var actionInvoked = false;
+        result.OnSuccess(() => actionInvoked = true);
+        Assert.False(actionInvoked);
+    }
+
+    [Fact]
+    public void OnFailure_Should_Invoke_Action_If_Failure()
+    {
+        var result = Result.Fail(Error.BadRequest);
+        var actionInvoked = false;
+        result.OnFailure(() => actionInvoked = true);
+        Assert.True(actionInvoked);
+    }
 
 }
