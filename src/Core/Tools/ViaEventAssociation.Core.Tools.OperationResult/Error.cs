@@ -1,87 +1,38 @@
+using System.Runtime.InteropServices.JavaScript;
+
 namespace ViaEventAssociation.Core.Tools.OperationResult {
     public class Error {
         public int Code { get; }
         public string Message { get; }
-
-        private Error(int code, string message) {
+        protected Error(int code, string message) {
             Code = code;
             Message = message;
         }
-
-        // Application-Specific Errors
-        public static Error NoError => new Error((int) ErrorCode.NoError, GetMessage(ErrorCode.NoError));
-        public static Error BadRequest => new Error((int) ErrorCode.BadRequest, GetMessage(ErrorCode.BadRequest));
-        public static Error Unauthorized => new Error((int) ErrorCode.Unauthorized, GetMessage(ErrorCode.Unauthorized));
-        public static Error Forbidden => new Error((int) ErrorCode.Forbidden, GetMessage(ErrorCode.Forbidden));
-        public static Error NotFound => new Error((int) ErrorCode.NotFound, GetMessage(ErrorCode.NotFound));
-        public static Error Teapot => new Error((int) ErrorCode.Teapot, GetMessage(ErrorCode.Teapot));
-        public static Error InternalServerError => new Error((int) ErrorCode.InternalServerError, GetMessage(ErrorCode.InternalServerError));
-        public static Error InvalidEmail => new Error((int) ErrorCode.InvalidEmail, GetMessage(ErrorCode.InvalidEmail));
-        public static Error InvalidDateTime => new Error((int) ErrorCode.InvalidDateTime, GetMessage(ErrorCode.InvalidDateTime));
-        public static Error DuplicateUID => new Error((int) ErrorCode.DuplicateUID, GetMessage(ErrorCode.DuplicateUID));
-        public static Error EventFull => new Error((int) ErrorCode.EventFull, GetMessage(ErrorCode.EventFull));
-        public static Error PaymentRequired => new Error((int) ErrorCode.PaymentRequired, GetMessage(ErrorCode.PaymentRequired));
-        public static Error EventCancelled => new Error((int) ErrorCode.EventCancelled, GetMessage(ErrorCode.EventCancelled));
-        public static Error AccessDenied => new Error((int) ErrorCode.AccessDenied, GetMessage(ErrorCode.AccessDenied));
-        public static Error ResourceNotAvailable => new Error((int) ErrorCode.ResourceNotAvailable, GetMessage(ErrorCode.ResourceNotAvailable));
-        public static Error ValidationFailed => new Error((int) ErrorCode.ValidationFailed, GetMessage(ErrorCode.ValidationFailed));
-        public static Error RateLimitExceeded => new Error((int) ErrorCode.RateLimitExceeded, GetMessage(ErrorCode.RateLimitExceeded));
-
-        public static List<Error> MultipleErrors(params ErrorCode[] codes) {
-            return codes.Select(code => new Error((int) code, GetMessage(code))).ToList();
-        }
+        // Factory methods for creating specific errors
+        public static Error NoError => new Error(0, "No error");
+        public static Error BadRequest => new Error(400, "The request could not be understood by the server due to malformed syntax.");
+        public static Error Unauthorized => new Error(401, "The request requires user authentication.");
+        public static Error Forbidden => new Error(403, "The server understood the request, but is refusing to fulfill it.");
+        public static Error NotFound => new Error(404, "The server has not found anything matching the Request-URI.");
+        public static Error Teapot => new Error(418, "I'm a teapot. The requested entity body is short and stout. Tip me over and pour me out.");
+        public static Error InternalServerError => new Error(500, "The server encountered an unexpected condition which prevented it from fulfilling the request.");
+        public static Error InvalidEmail => new Error(1001, "The email address provided is invalid.");
+        public static Error InvalidDateTime => new Error(1002, "The date or time provided does not match the expected format or is out of range.");
+        public static Error DuplicateUID => new Error(1003, "The UID provided already exists.");
+        public static Error EventFull => new Error(1004, "The event has reached its capacity limit. No more tickets can be sold.");
+        public static Error PaymentRequired => new Error(1005, "Payment information is required to complete this operation.");
+        public static Error EventCancelled => new Error(1006, "The event has been cancelled.");
+        public static Error AccessDenied => new Error(1007, "You do not have permission to perform this action.");
+        public static Error ResourceNotAvailable => new Error(1008, "The requested resource is not available.");
+        public static Error ValidationFailed => new Error(1009, "Provided data did not pass validation checks.");
+        public static Error RateLimitExceeded => new Error(1010, "Too many requests. Please try again later.");
+        public static Error InvalidDateTimeRange => new Error(1011, "The start time must be before the end time.");
+        public static Error InvalidOrganizerName => new Error(1012, "The organizer name cannot be empty.");
+        public static Error Unknown => new Error(9999, "An unknown error occurred.");
+        public static Error BlankString => new Error(1013, "The provided string cannot be blank.");
 
         // Method to convert Exception to a generic Error
-        public static Error Exception(Exception exception) => new Error((int) ErrorCode.InternalServerError, exception.Message);
+        public static Error FromException(Exception exception) { return new Error(500, exception.Message); }
 
-        public enum ErrorCode {
-            NoError = 0,
-
-            // HTTP Error Codes
-            BadRequest = 400,
-            Unauthorized = 401,
-            Forbidden = 403,
-            NotFound = 404,
-            Teapot = 418,
-            InternalServerError = 500,
-
-            // Application-Specific Error Codes
-            InvalidEmail = 1001,
-            InvalidDateTime = 1002,
-            DuplicateUID = 1003,
-            EventFull = 1004,
-            PaymentRequired = 1005,
-            EventCancelled = 1006,
-            AccessDenied = 1007,
-            ResourceNotAvailable = 1008,
-            ValidationFailed = 1009,
-            RateLimitExceeded = 1010
-        }
-
-        private static readonly Dictionary<ErrorCode, string> Messages = new Dictionary<ErrorCode, string> {
-            {ErrorCode.NoError, "No error"},
-            // HTTP Error Messages
-            {ErrorCode.BadRequest, "The request could not be understood by the server due to malformed syntax."},
-            {ErrorCode.Unauthorized, "The request requires user authentication."},
-            {ErrorCode.Forbidden, "The server understood the request, but is refusing to fulfill it."},
-            {ErrorCode.NotFound, "The server has not found anything matching the Request-URI."},
-            {ErrorCode.Teapot, "I'm a teapot. The requested entity body is short and stout. Tip me over and pour me out."},
-            {ErrorCode.InternalServerError, "The server encountered an unexpected condition which prevented it from fulfilling the request."},
-            // Application-Specific Error Messages
-            {ErrorCode.InvalidEmail, "The email address provided is invalid."},
-            {ErrorCode.InvalidDateTime, "The date or time provided does not match the expected format or is out of range."},
-            {ErrorCode.DuplicateUID, "The UID provided already exists."},
-            {ErrorCode.EventFull, "The event has reached its capacity limit. No more tickets can be sold."},
-            {ErrorCode.PaymentRequired, "Payment information is required to complete this operation."},
-            {ErrorCode.EventCancelled, "The event has been cancelled."},
-            {ErrorCode.AccessDenied, "You do not have permission to perform this action."},
-            {ErrorCode.ResourceNotAvailable, "The requested resource is not available."},
-            {ErrorCode.ValidationFailed, "Provided data did not pass validation checks."},
-            {ErrorCode.RateLimitExceeded, "Too many requests. Please try again later."}
-        };
-
-        private static string GetMessage(ErrorCode code) {
-            return Messages.GetValueOrDefault(code, "An unexpected error occurred.");
-        }
     }
 }

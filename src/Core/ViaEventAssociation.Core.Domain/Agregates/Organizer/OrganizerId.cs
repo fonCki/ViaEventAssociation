@@ -1,0 +1,17 @@
+using ViaEventAssociation.Core.Domain.Common.Bases;
+using ViaEventAssociation.Core.Tools.OperationResult;
+
+namespace ViaEventAssociation.Core.Domain.Agregates.Organizer;
+
+public class OrganizerId : IdentityBase
+{
+    private OrganizerId(string prefix) : base(prefix) { }
+
+    public static Result<OrganizerId> GenerateId(){
+        try {
+            return new OrganizerId("OID");
+        } catch (Exception exception) {
+            return Result<OrganizerId>.Fail(Error.FromException(exception));
+        }
+    }
+}
