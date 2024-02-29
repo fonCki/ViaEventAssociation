@@ -11,7 +11,7 @@ public class GuestId : IdentityBase
         try {
             return new GuestId("GID");
         } catch (Exception exception) {
-            return Result<GuestId>.Fail(Error.FromException(exception));
+            return Error.FromException(exception);
         }
     }
 }

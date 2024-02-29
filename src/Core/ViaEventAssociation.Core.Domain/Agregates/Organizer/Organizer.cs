@@ -8,8 +8,8 @@ public class Organizer {
     public OrganizerName OrganizerName { get; private set; }
     public Email OrganizerEmail { get; private set; }
 
-    private Organizer(OrganizerName name, Email email) {
-        OrganizerId = OrganizerId.GenerateId().Value;
+    private Organizer(OrganizerId id, OrganizerName name, Email email) {
+        OrganizerId = id;
         OrganizerName = name;
         OrganizerEmail = email;
     }
@@ -17,27 +17,29 @@ public class Organizer {
     public static Result<Organizer> Create(string name, string email) {
         HashSet<Error> errors = new HashSet<Error>();
 
+        var organizerIdResult = OrganizerId.GenerateId();
+        if (organizerIdResult.IsFailure)
+            errors.Add(organizerIdResult.Error);
+
         var nameResult = OrganizerName.Create(name);
-        if (!nameResult.IsSuccess) {
+        if (nameResult.IsFailure)
             errors.Add(nameResult.Error);
-        }
+
 
         var emailResult = Email.Create(email);
-        if (!emailResult.IsSuccess) {
+        if (emailResult.IsFailure)
             errors.Add(emailResult.Error);
-        }
 
-        if (errors.Any()) {
+        if (errors.Any())
             return Error.Add(errors);
-        }
 
         // Note: Directly passing validated domain objects to the constructor
-        return new Organizer(nameResult.Value, emailResult.Value);
+        return new Organizer(organizerIdResult.Value, nameResult.Value, emailResult.Value);
     }
 
 
     public Result<Event> CreateEvent() {
         var eventResult = Event.Create(this);
-        return eventResult.IsSuccess ? Result<Event>.Success(eventResult.Value) : Result<Event>.Fail(eventResult.Error);
+        return eventResult.IsSuccess ? eventResult.Value : eventResult.Error;
     }
 }

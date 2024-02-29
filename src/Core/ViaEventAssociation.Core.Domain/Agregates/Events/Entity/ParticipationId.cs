@@ -11,7 +11,7 @@ public class ParticipationId : IdentityBase
         try {
             return new ParticipationId("PID");
         } catch (Exception exception) {
-            return Result<ParticipationId>.Fail(Error.FromException(exception));
+            return Error.FromException(exception);
         }
     }
 }

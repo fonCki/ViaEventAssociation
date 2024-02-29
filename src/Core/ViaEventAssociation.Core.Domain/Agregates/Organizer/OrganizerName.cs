@@ -17,14 +17,26 @@ public class OrganizerName: ValueObject {
         if (validation.IsSuccess) {
             return new OrganizerName(name);
         }
-        return Result<OrganizerName>.Fail(validation.Error);
+
+        return validation.Error;
     }
 
     private static Result Validate(string name) {
-        if (string.IsNullOrWhiteSpace(name)) {
-            return Error.InvalidOrganizerName;
-        }
-        return true;
+        HashSet<Error> errors = new HashSet<Error>();
+
+        if (name == null)
+            return Error.NullString;
+
+        if (string.IsNullOrWhiteSpace(name))
+            errors.Add(Error.BlankString);
+
+        if (name.Length > MAX_LENGTH)
+            errors.Add(Error.TooLongString);
+
+        if (errors.Any())
+            return Error.Add(errors);
+
+        return Result.Success();
     }
 
     protected override IEnumerable<object> GetEqualityComponents() {

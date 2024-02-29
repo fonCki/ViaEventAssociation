@@ -17,14 +17,14 @@ public class DateTimeRange : ValueObject {
         if (validation.IsSuccess) {
             return new DateTimeRange(start, end);
         }
-        return Result<DateTimeRange>.Fail(validation.Error);
+
+        return validation.Error;
     }
 
     private static Result Validate(DateTime start, DateTime end) {
-        if (end <= start) {
-            return Error.InvalidDateTimeRange; // Assuming you have this error defined in your Error class
-        }
-        return true;
+        if (start == null || end == null)
+            return Error.NullDateTime;
+        return (end <= start) ? Error.InvalidDateTimeRange : Result.Ok;
     }
 
     protected override IEnumerable<object> GetEqualityComponents() {

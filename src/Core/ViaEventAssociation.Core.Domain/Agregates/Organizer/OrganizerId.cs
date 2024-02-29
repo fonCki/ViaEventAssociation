@@ -11,7 +11,7 @@ public class OrganizerId : IdentityBase
         try {
             return new OrganizerId("OID");
         } catch (Exception exception) {
-            return Result<OrganizerId>.Fail(Error.FromException(exception));
+            return Error.FromException(exception);
         }
     }
 }

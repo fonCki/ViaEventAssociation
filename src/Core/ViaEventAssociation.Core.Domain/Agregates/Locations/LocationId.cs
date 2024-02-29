@@ -11,7 +11,7 @@ public class LocationId : IdentityBase
         try {
             return new LocationId("LID");
         } catch (Exception exception) {
-            return Result<LocationId>.Fail(Error.FromException(exception));
+            return Error.FromException(exception);
         }
         return new LocationId("LID");
     }

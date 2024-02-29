@@ -11,6 +11,7 @@ public class Result {
         Error = error;
     }
 
+    public static readonly Result Ok = new Result(true, null);
 
     // Overloaded factory method for failure with multiple errors
     public static Result Fail(Error error) {
@@ -19,8 +20,7 @@ public class Result {
 
     // Factory method for success
     public static Result Success() {
-        //TODO: Add a no error instance?
-        return new Result(true, null);
+        return Ok;
     }
 
     // Implicit operator for converting ErrorCollection to a Result
@@ -40,13 +40,12 @@ public class Result {
         return this; // Return current Result for chaining
     }
 
-    //TODO Fix this
-    // public Result OnFailure(Action<Error> action) {
-    //     if (IsFailure) {
-    //         action?.Invoke(action);
-    //     }
-    //     return this; // Return current Result for chaining
-    // }
+    public Result OnFailure(Action<Error> action) {
+        if (IsFailure) {
+            action?.Invoke(this.Error);
+        }
+        return this; // Return current Result for chaining
+    }
 }
 
 public class Result<T> : Result {
@@ -56,6 +55,9 @@ public class Result<T> : Result {
         Value = value;
     }
 
+    public static Result<T> Ok(T value) {
+        return new Result<T>(true, value, null); // Clearly indicates a successful result with a value
+    }
 
     // Overloaded factory method for failure with multiple errors
     public static Result<T> Fail(Error error) {
@@ -64,7 +66,7 @@ public class Result<T> : Result {
 
     // Factory method for success with generic type
     public static Result<T> Success(T value) {
-        return new Result<T>(true, value, null);
+        return Ok(value);
     }
 
     // Implicit operator for converting a value to a Result<T>
@@ -85,11 +87,10 @@ public class Result<T> : Result {
         return this; // Return current Result<T> for chaining
     }
 
-    //TODO Fix this
-    // public new Result<T> OnFailure(Action<Error> action) {
-    //     if (IsFailure) {
-    //         action?.Invoke(this.Error);
-    //     }
-    //     return this; // Return current Result<T> for chaining
-    // }
+    public Result<T> OnFailure(Action<Error> action) {
+        if (IsFailure) {
+            action?.Invoke(this.Error);
+        }
+        return this; // Return current Result<T> for chaining
+    }
 }

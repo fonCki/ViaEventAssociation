@@ -9,7 +9,7 @@ public class EventId : IdentityBase {
         try {
             return new EventId("EID");
         } catch (Exception exception) {
-            return Result<EventId>.Fail(Error.FromException(exception));
+            return Error.FromException(exception);
         }
     }
 }

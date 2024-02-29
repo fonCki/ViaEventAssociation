@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
 using System.Text.RegularExpressions;
 using ViaEventAssociation.Core.Domain.Common.Bases;
 using ViaEventAssociation.Core.Tools.OperationResult;
@@ -14,25 +13,23 @@ public class Email: ValueObject {
 
     public static Result<Email> Create(string email) {
         var validation = Validate(email);
-        if (validation.IsSuccess) {
-            return new Email(email);
-        }
-        return validation.Error;
+        return validation.IsSuccess ? new Email(email) : validation.Error;
     }
 
-
     private static Result Validate(string email) {
-
-        // Create a collection to hold errors
         HashSet<Error> errors = new HashSet<Error>();
 
-        // Check if email matches regular expression for email validation
-        if (string.IsNullOrWhiteSpace(email)) errors.Add(Error.BlankString);
+        if (email == null)
+            return Error.NullString;
 
         // Check if email matches regular expression for email validation
-        if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")) errors.Add(Error.InvalidEmail);
+        if (string.IsNullOrWhiteSpace(email))
+            errors.Add(Error.BlankString);
 
-        // If there are errors, return them
+        // Check if email matches regular expression for email validation
+        if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
+            errors.Add(Error.InvalidEmail);
+
         if (errors.Any())
             return Error.Add(errors);
 
