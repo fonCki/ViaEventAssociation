@@ -5,20 +5,25 @@ using System.Runtime.InteropServices.JavaScript;
 using ViaEventAssociation.Core.Domain.Agregates.Organizer;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
-var result = Organizer.Create("", "canteen");
-Organizer organizator;
+var result = Organizer.Create("adf", "g2@fma.com");
+Organizer organizator = result.Value;
 
 if (result.IsFailure) {
-    Console.WriteLine(result.Errors.GetAll());
+    Error error = result.Error;
+    while (error != null) {
+        Console.WriteLine(error.Message);
+        error = error.Next;
+    }
 }
 else {
-     organizator = result.Value;
-}
+    organizator = result.Value;
 
-// Console.WriteLine(organizator);
-// Console.WriteLine(organizator.OrganizerId);
-// Console.WriteLine(organizator.OrganizerName.Value);
-// Console.WriteLine(organizator.OrganizerEmail.Value);
+
+    Console.WriteLine(organizator);
+    Console.WriteLine(organizator.OrganizerId);
+    Console.WriteLine(organizator.OrganizerName.Value);
+    Console.WriteLine(organizator.OrganizerEmail.Value);
+}
 
 // var newEvent = organizator.CreateEvent().Value;
 // Console.WriteLine(newEvent);

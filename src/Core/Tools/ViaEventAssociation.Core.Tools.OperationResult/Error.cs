@@ -4,10 +4,9 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
     public class Error {
         public int Code { get; }
         public string Message { get; }
-        protected Error(int code, string message) {
-            Code = code;
-            Message = message;
-        }
+        public Error Next { get; private set; }
+
+
         // Factory methods for creating specific errors
         public static Error NoError => new Error(0, "No error");
         public static Error BadRequest => new Error(400, "The request could not be understood by the server due to malformed syntax.");
@@ -30,9 +29,52 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
         public static Error InvalidOrganizerName => new Error(1012, "The organizer name cannot be empty.");
         public static Error Unknown => new Error(9999, "An unknown error occurred.");
         public static Error BlankString => new Error(1013, "The provided string cannot be blank.");
-
         // Method to convert Exception to a generic Error
         public static Error FromException(Exception exception) { return new Error(500, exception.Message); }
+
+
+        private Error(int code, string message) {
+            Code = code;
+            Message = message;
+            Next = null;
+        }
+
+        private void Append(Error error) {
+            if (this.Next == null) {
+                this.Next = error;
+            } else {
+                this.Next.Append(error);
+            }
+        }
+
+        public static Error Add(HashSet<Error> errors) {
+            // Create a new error with the first error in the chain
+            var error = errors.First();
+            // Add the rest of the errors to the chain
+            foreach (var e in errors.Skip(1)) {
+                error.Append(e);
+            }
+            return error;
+        }
+
+        public static Error Add(Error error) {
+            var newError = new Error(error.Code, error.Message);
+            return newError;
+        }
+
+        public int Count() {
+            return Next == null ? 1 : 1 + Next.Count();
+        }
+
+        public IEnumerable<Error> GetAllErrors() {
+            var errors = new List<Error> { this };
+            var current = this.Next;
+            while (current != null) {
+                errors.Add(current);
+                current = current.Next;
+            }
+            return errors;
+        }
 
     }
 }

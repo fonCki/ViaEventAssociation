@@ -3,36 +3,34 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 public class Result {
     public bool IsSuccess { get; }
-    public ErrorCollection Errors { get; }
+    public Error Error { get; }
     public bool IsFailure => !IsSuccess;
 
-    protected Result(bool isSuccess, ErrorCollection errors) {
+    protected Result(bool isSuccess, Error error) {
         IsSuccess = isSuccess;
-        Errors = errors;
+        Error = error;
     }
 
 
     // Overloaded factory method for failure with multiple errors
-    public static Result Fail(ErrorCollection errors) {
-        return new Result(false, errors);
+    public static Result Fail(Error error) {
+        return new Result(false, error);
     }
 
     // Factory method for success
     public static Result Success() {
-        //TODO: Add a no error instance
+        //TODO: Add a no error instance?
         return new Result(true, null);
     }
 
-
     // Implicit operator for converting ErrorCollection to a Result
-    public static implicit operator Result(ErrorCollection errors) {
-        return Fail(errors);
+    public static implicit operator Result(Error error) {
+        return Fail(error);
     }
 
     // Implicit operator for converting a bool (success flag) to a Result
     public static implicit operator Result(bool successFlag) {
-        // return successFlag ? Success() : Fail(ErrorCollection.FromError(Error.Unknown));
-        return true;
+         return successFlag ? Success() : Fail(Error.Unknown);
     }
 
     public Result OnSuccess(Action action) {
@@ -54,14 +52,14 @@ public class Result {
 public class Result<T> : Result {
     public T Value { get; private set; }
 
-    private Result(bool isSuccess, T value, ErrorCollection errors) : base(isSuccess, errors) {
+    private Result(bool isSuccess, T value, Error error) : base(isSuccess, error) {
         Value = value;
     }
 
 
     // Overloaded factory method for failure with multiple errors
-    public static Result<T> Fail(ErrorCollection errors) {
-        return new Result<T>(false, default(T), errors);
+    public static Result<T> Fail(Error error) {
+        return new Result<T>(false, default(T), error);
     }
 
     // Factory method for success with generic type
@@ -76,8 +74,8 @@ public class Result<T> : Result {
 
 
     // Implicit operator for converting ErrorCollection to a Result<T>
-    public static implicit operator Result<T>(ErrorCollection errors) {
-        return Fail(errors);
+    public static implicit operator Result<T>(Error error) {
+        return Fail(error);
     }
 
     public Result<T> OnSuccess(Action<T> action) {

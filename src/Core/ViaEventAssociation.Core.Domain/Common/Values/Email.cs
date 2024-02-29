@@ -17,36 +17,27 @@ public class Email: ValueObject {
         if (validation.IsSuccess) {
             return new Email(email);
         }
-        return validation.Errors;
+        return validation.Error;
     }
 
 
     private static Result Validate(string email) {
 
-        var errors = ErrorCollection.AddFirst(Error.InvalidEmail).Add(Error.BlankString).
-        // ErrorCollection errors = null; // Initialize as null to indicate no errors yet
-        //
-        // // Check for blank email
-        // if (string.IsNullOrWhiteSpace(email)) {
-        //     var error = Error.BlankString; // Use your specific Error instance for blank string
-        //     errors = errors == null ? ErrorCollection.AddFirst(error) : errors.Add(Error.Forbidden);
-        // }
-        //
-        // // Check if email matches regular expression for email validation
-        // if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")) {
-        //     var error = Error.InvalidEmail; // Use your specific Error instance for invalid email
-        //     errors = errors == null ? ErrorCollection.AddFirst(error) : errors.Add(error);
-        // }
-        //
-        // // Determine whether to return a single error or a collection
-        // if (errors != null) {
-        //     // There are errors, return them
-        //     // If there's only one, GetFirstOrDefault will effectively return it
-        //     return Result.Fail(errors.GetFirstOrDefault() ?? errors); // if GetFirstOrDefault() is null, errors itself is returned
-        // }
-        //
-        // // If no errors, validation is successful
-        // return Result.Success();
+        // Create a collection to hold errors
+        HashSet<Error> errors = new HashSet<Error>();
+
+        // Check if email matches regular expression for email validation
+        if (string.IsNullOrWhiteSpace(email)) errors.Add(Error.BlankString);
+
+        // Check if email matches regular expression for email validation
+        if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")) errors.Add(Error.InvalidEmail);
+
+        // If there are errors, return them
+        if (errors.Any())
+            return Error.Add(errors);
+
+        // If no errors, validation is successful
+        return Result.Success();
     }
 
 
