@@ -3,22 +3,26 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Agregates.Organizer;
 
-public class OrganizerName: ValueObject {
+public class OrganizerName : ValueObject {
     //TODO: Add a max length to the organizer name error multiple times
     private static readonly int MAX_LENGTH = 50;
-    public string Value { get; }
 
     private OrganizerName(string value) {
         Value = value;
     }
 
-    public static Result<OrganizerName> Create(string name) {
-        var validation = Validate(name);
-        if (validation.IsSuccess) {
-            return new OrganizerName(name);
-        }
+    public string Value { get; }
 
-        return validation.Error;
+    public static Result<OrganizerName> Create(string name) {
+        try {
+            var validation = Validate(name);
+            if (validation.IsSuccess) return new OrganizerName(name);
+
+            return validation.Error;
+        }
+        catch (Exception exception) {
+            return Error.FromException(exception);
+        }
     }
 
     private static Result Validate(string name) {

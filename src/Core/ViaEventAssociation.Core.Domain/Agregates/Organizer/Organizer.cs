@@ -1,18 +1,17 @@
-using ViaEventAssociation.Core.Domain.Agregates.Events;
 using ViaEventAssociation.Core.Domain.Agregates.Organizer;
 using ViaEventAssociation.Core.Domain.Common.Values;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 public class Organizer {
-    public OrganizerId OrganizerId { get; private set; }
-    public OrganizerName OrganizerName { get; private set; }
-    public Email OrganizerEmail { get; private set; }
-
     private Organizer(OrganizerId id, OrganizerName name, Email email) {
         OrganizerId = id;
         OrganizerName = name;
         OrganizerEmail = email;
     }
+
+    public OrganizerId OrganizerId { get; private set; }
+    public OrganizerName OrganizerName { get; private set; }
+    public Email OrganizerEmail { get; private set; }
 
     public static Result<Organizer> Create(string name, string email) {
         HashSet<Error> errors = new HashSet<Error>();
@@ -34,12 +33,12 @@ public class Organizer {
             return Error.Add(errors);
 
         // Note: Directly passing validated domain objects to the constructor
-        return new Organizer(organizerIdResult.Value, nameResult.Value, emailResult.Value);
+        return new Organizer(organizerIdResult.Payload, nameResult.Payload, emailResult.Payload);
     }
 
 
     public Result<Event> CreateEvent() {
         var eventResult = Event.Create(this);
-        return eventResult.IsSuccess ? eventResult.Value : eventResult.Error;
+        return eventResult.IsSuccess ? eventResult.Payload : eventResult.Error;
     }
 }

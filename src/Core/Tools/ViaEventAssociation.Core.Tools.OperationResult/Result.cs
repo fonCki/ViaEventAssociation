@@ -1,17 +1,16 @@
-using System.Runtime.InteropServices.JavaScript;
 using ViaEventAssociation.Core.Tools.OperationResult;
 
 public class Result {
-    public bool IsSuccess { get; }
-    public Error Error { get; }
-    public bool IsFailure => !IsSuccess;
+    public static readonly Result Ok = new(true, null);
 
     protected Result(bool isSuccess, Error error) {
         IsSuccess = isSuccess;
         Error = error;
     }
 
-    public static readonly Result Ok = new Result(true, null);
+    public bool IsSuccess { get; }
+    public Error Error { get; }
+    public bool IsFailure => !IsSuccess;
 
     // Overloaded factory method for failure with multiple errors
     public static Result Fail(Error error) {
@@ -30,13 +29,14 @@ public class Result {
 
     // Implicit operator for converting a bool (success flag) to a Result
     public static implicit operator Result(bool successFlag) {
-         return successFlag ? Success() : Fail(Error.Unknown);
+        return successFlag ? Success() : Fail(Error.Unknown);
     }
 
     public Result OnSuccess(Action action) {
         if (IsSuccess) {
             action?.Invoke();
         }
+
         return this; // Return current Result for chaining
     }
 
@@ -44,16 +44,17 @@ public class Result {
         if (IsFailure) {
             action?.Invoke(this.Error);
         }
+
         return this; // Return current Result for chaining
     }
 }
 
 public class Result<T> : Result {
-    public T Value { get; private set; }
-
     private Result(bool isSuccess, T value, Error error) : base(isSuccess, error) {
-        Value = value;
+        Payload = value;
     }
+
+    public T Payload { get; }
 
     public static Result<T> Ok(T value) {
         return new Result<T>(true, value, null); // Clearly indicates a successful result with a value
@@ -82,8 +83,9 @@ public class Result<T> : Result {
 
     public Result<T> OnSuccess(Action<T> action) {
         if (IsSuccess) {
-            action?.Invoke(this.Value);
+            action?.Invoke(Payload);
         }
+
         return this; // Return current Result<T> for chaining
     }
 
@@ -91,6 +93,7 @@ public class Result<T> : Result {
         if (IsFailure) {
             action?.Invoke(this.Error);
         }
+
         return this; // Return current Result<T> for chaining
     }
 }

@@ -4,21 +4,24 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 namespace ViaEventAssociation.Core.Domain.Common.Values;
 
 public class DateTimeRange : ValueObject {
-    public DateTime Start { get;}
-    public DateTime End { get; }
-
     private DateTimeRange(DateTime start, DateTime end) {
         Start = start;
         End = end;
     }
 
-    public static Result<DateTimeRange> Create(DateTime start, DateTime end) {
-        var validation = Validate(start, end);
-        if (validation.IsSuccess) {
-            return new DateTimeRange(start, end);
-        }
+    public DateTime Start { get; }
+    public DateTime End { get; }
 
-        return validation.Error;
+    public static Result<DateTimeRange> Create(DateTime start, DateTime end) {
+        try {
+            var validation = Validate(start, end);
+            if (validation.IsSuccess) return new DateTimeRange(start, end);
+
+            return validation.Error;
+        }
+        catch (Exception exception) {
+            return Error.FromException(exception);
+        }
     }
 
     private static Result Validate(DateTime start, DateTime end) {

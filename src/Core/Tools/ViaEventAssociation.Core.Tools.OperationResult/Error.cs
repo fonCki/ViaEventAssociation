@@ -1,7 +1,11 @@
-using System.Runtime.InteropServices.JavaScript;
-
 namespace ViaEventAssociation.Core.Tools.OperationResult {
     public class Error {
+        private Error(int code, string message) {
+            Code = code;
+            Message = message;
+            Next = null;
+        }
+
         public int Code { get; }
         public string Message { get; }
         public Error Next { get; private set; }
@@ -16,6 +20,7 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
         // public static Error Teapot => new Error(418, "I'm a teapot. The requested entity body is short and stout. Tip me over and pour me out.");
         // public static Error InternalServerError => new Error(500, "The server encountered an unexpected condition which prevented it from fulfilling the request.");
         public static Error InvalidEmail => new Error(1001, "The email address provided is invalid.");
+
         // public static Error InvalidDateTime => new Error(1002, "The date or time provided does not match the expected format or is out of range.");
         // public static Error DuplicateUID => new Error(1003, "The UID provided already exists.");
         // public static Error EventFull => new Error(1004, "The event has reached its capacity limit. No more tickets can be sold.");
@@ -34,24 +39,23 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
         public static Error TooShortString => new Error(1015, "The provided string is too short.");
         public static Error EventStatusInvalid => new Error(1016, "The event status is invalid for this operation.");
         public static Error NullString => new Error(1017, "The provided string cannot be null.");
+
         public static Result NullDateTime => new Error(1018, "The provided date or time cannot be null.");
 
+        // a failure message is returned explaining an active event cannot be modified
+        public static Error EventStatusIsActive => new(1019, "The event status is active and cannot be modified.");
+        public static Error EventStatusIsCanceled => new(1020, "The event status is canceled and cannot be modified.");
+
         // Method to convert Exception to a generic Error
-        public static Error FromException(Exception exception) { return new Error(500, exception.Message); }
-
-
-        private Error(int code, string message) {
-            Code = code;
-            Message = message;
-            Next = null;
+        public static Error FromException(Exception exception) {
+            return new Error(500, exception.Message);
         }
 
         private void Append(Error error) {
-            if (this.Next == null) {
+            if (this.Next == null)
                 this.Next = error;
-            } else {
+            else
                 this.Next.Append(error);
-            }
         }
 
         public static Error Add(HashSet<Error> errors) {
@@ -61,6 +65,7 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
             foreach (var e in errors.Skip(1)) {
                 error.Append(e);
             }
+
             return error;
         }
 
@@ -74,12 +79,13 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
         }
 
         public IEnumerable<Error> GetAllErrors() {
-            var errors = new List<Error> { this };
+            var errors = new List<Error> {this};
             var current = this.Next;
             while (current != null) {
                 errors.Add(current);
                 current = current.Next;
             }
+
             return errors;
         }
 
@@ -88,8 +94,8 @@ namespace ViaEventAssociation.Core.Tools.OperationResult {
             if (Next != null) {
                 return $"{Message}\n{Next}";
             }
+
             return Message;
         }
-
     }
 }

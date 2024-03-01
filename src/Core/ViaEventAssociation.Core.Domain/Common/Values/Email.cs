@@ -4,16 +4,21 @@ using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Common.Values;
 
-public class Email: ValueObject {
-    public string Value { get; private set; }
-
+public class Email : ValueObject {
     private Email(string value) {
         Value = value;
     }
 
+    public string Value { get; }
+
     public static Result<Email> Create(string email) {
-        var validation = Validate(email);
-        return validation.IsSuccess ? new Email(email) : validation.Error;
+        try {
+            var validation = Validate(email);
+            return validation.IsSuccess ? new Email(email) : validation.Error;
+        }
+        catch (Exception exception) {
+            return Error.FromException(exception);
+        }
     }
 
     private static Result Validate(string email) {
@@ -36,7 +41,6 @@ public class Email: ValueObject {
         // If no errors, validation is successful
         return Result.Success();
     }
-
 
 
     protected override IEnumerable<object> GetEqualityComponents() {
