@@ -1,63 +1,46 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-
-using ViaEventAssociation.Core.Tools.OperationResult;
+using ViaEventAssociation.Core.Domain.Agregates.Guests;
 
 var result = Organizer.Create("The Canteen", "canteen@gmail.com");
-var organizator = result.Payload;
+var @event = Event.Create(result.Payload).Payload;
 
-if (result.IsFailure) {
-    Error error = result.Error;
-    while (error != null) {
-        Console.WriteLine(error.Message);
-        error = error.Next;
-    }
+
+@event.UpdateTitle("The Canteen's 1st Anniversary");
+@event.UpdateDescription("We are celebrating our 1st anniversary and we want to invite you to join us for a night of fun and celebration. We will have live music, food, and drinks. We hope to see you there!");
+@event.UpdateTimeSpan(DateTime.Now.AddHours(2), DateTime.Now.AddHours(5));
+@event.MakePublic();
+@event.SetMaxGuests(10);
+@event.Activate();
+
+
+var guest = Guest.Create("John", "Doe", "JDH@via.dk").Payload;
+
+// var resul = @event.SendInvitation(guest);
+
+var res = @event.SendInvitation(guest);
+
+Console.WriteLine(res.IsSuccess);
+res.OnFailure(error => Console.WriteLine(error));
+
+Print();
+
+// guest.RejectInvitation(@event);
+Print();
+@event.SendInvitation(guest);
+Print();
+guest.AcceptInvitation(@event);
+Print();
+
+
+void Print() {
+//for each guest in the HashMap print the name
+    Console.WriteLine("***************************************************");
+    Console.WriteLine("The confirmed participations are:");
+    foreach (var participation in @event.Participations) Console.WriteLine(participation + " " + participation.ParticipationStatus);
+
+
+    Console.WriteLine("***************************************************");
+    Console.WriteLine("The guest's participations are:");
+    foreach (var participation in guest.Participations) Console.WriteLine(participation + " " + participation.ParticipationStatus);
 }
-else {
-    organizator = result.Payload;
-
-
-    Console.WriteLine(organizator);
-    Console.WriteLine(organizator.OrganizerId);
-    Console.WriteLine(organizator.OrganizerName.Value);
-    Console.WriteLine(organizator.OrganizerEmail.Value);
-}
-
-var newEvent = organizator.CreateEvent().Payload;
-Console.WriteLine("************************************");
-Console.WriteLine(newEvent);
-Console.WriteLine(newEvent.Title);
-Console.WriteLine(newEvent.Id);
-Console.WriteLine(newEvent.MaxNumberOfGuests);
-Console.WriteLine(newEvent.Status);
-Console.WriteLine(newEvent.Visibility);
-Console.WriteLine(newEvent.Description);
-Console.WriteLine(newEvent.TimeSpan);
-
-
-//TODO: Talk with troels: Note (for session 2): Your ID type, e.g. Eventid, if it's not a plain Guid, but a wrapper, needs to be able to create an ID from a string of a Guid. Like: Eventid.FromString("...");
-// WHY do I naed an ID? should not created automatically?
-
-newEvent.UpdateTitle("new Title").OnFailure(error => Console.WriteLine(error));
-
-
-var r = newEvent.UpdateTitle("My New Title");
-
-if (r.IsFailure) {
-    Error error = r.Error;
-    while (error != null) {
-        Console.WriteLine(error.Message);
-        error = error.Next;
-    }
-}
-else {
-    Console.WriteLine("Title updated!");
-}
-
-Console.WriteLine(newEvent.Title.Value);
-
-Console.WriteLine("************************************");
-newEvent.UpdateDescription(" asdf asdkfh adsnvdsh fv;ashdnv djsfkbv c;kasjdfkasjdnfkjcdfsbc vad vajsdho;asdn vjdbfsncvjn dfsiv cduicnvfd vjdf in cvbdnsfionac sadsnvdsh fv;ashdnv djsfkbv c;kasjdfkasjdnfkjcdfsbc vad vajsdho;asdn vjdbfsncvjn dfsiv cduicnvfd vjdf in cvbdnsfionac sadsnvdsh fv;ashdnv djsfkbv c;kasjdfkasjdnfkjcdfsbc vad vajsdho;asdn vjdbfsncvjn dfsiv cduicnvfd vjdf in cvbdnsfionac s ").OnFailure(error => Console.WriteLine(error));
-
-
-Console.WriteLine(newEvent.Description.Value);

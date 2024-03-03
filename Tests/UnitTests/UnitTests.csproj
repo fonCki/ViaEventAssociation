@@ -22,6 +22,15 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Core\Tools\ViaEventAssociation.Core.Tools.OperationResult\ViaEventAssociation.Core.Tools.OperationResult.csproj" />
+        <ProjectReference Include="..\..\src\Core\ViaEventAssociation.Core.Domain\ViaEventAssociation.Core.Domain.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Common\Values\"/>
+        <Folder Include="Features\Guest\AcceptInvitation\"/>
+        <Folder Include="Features\Guest\CancelEvent\"/>
+        <Folder Include="Features\Guest\GetInvited\"/>
+        <Folder Include="Features\Guest\RejectInvitation\"/>
     </ItemGroup>
 
 </Project>

@@ -1,16 +1,13 @@
-using ViaEventAssociation.Core.Domain.Common.Bases;
-using ViaEventAssociation.Core.Tools.OperationResult;
-
 namespace ViaEventAssociation.Core.Domain.Agregates.Organizer;
 
-public class OrganizerId : IdentityBase
-{
+public class OrganizerId : IdentityBase {
     private OrganizerId(string prefix) : base(prefix) { }
 
-    public static Result<OrganizerId> GenerateId(){
+    public static Result<OrganizerId> GenerateId() {
         try {
             return new OrganizerId("OID");
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             return Error.FromException(exception);
         }
     }

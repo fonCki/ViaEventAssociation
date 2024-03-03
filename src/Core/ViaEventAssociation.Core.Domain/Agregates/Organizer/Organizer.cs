@@ -1,6 +1,5 @@
 using ViaEventAssociation.Core.Domain.Agregates.Organizer;
 using ViaEventAssociation.Core.Domain.Common.Values;
-using ViaEventAssociation.Core.Tools.OperationResult;
 
 public class Organizer {
     private Organizer(OrganizerId id, OrganizerName name, Email email) {

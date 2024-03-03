@@ -1,5 +1,4 @@
 using ViaEventAssociation.Core.Domain.Common.Bases;
-using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Agregates.Organizer;
 
@@ -35,7 +34,7 @@ public class OrganizerName : ValueObject {
             errors.Add(Error.BlankString);
 
         if (name.Length > MAX_LENGTH)
-            errors.Add(Error.TooLongString);
+            errors.Add(Error.TitleTooLong);
 
         if (errors.Any())
             return Error.Add(errors);

@@ -1,101 +1,145 @@
-namespace ViaEventAssociation.Core.Tools.OperationResult {
-    public class Error {
-        private Error(int code, string message) {
-            Code = code;
-            Message = message;
-            Next = null;
+public class Error {
+    private Error(string message) {
+        Message = message;
+        Next = null;
+    }
+
+    public string Message { get; }
+    public Error Next { get; private set; }
+
+    public static Error InvalidEmail => new("The email address format provided is invalid.");
+    public static Error InvalidDateTimeRange => new("The start time must be before the end time.");
+    public static Error Unknown => new("An unknown error occurred.");
+    public static Error BlankString => new("The provided string cannot be blank.");
+    public static Error TitleTooLong => new("The provided title is too long, maximum length is 50 characters.");
+    public static Error NullString => new("The provided string cannot be null.");
+    public static Error NullDateTime => new("The provided date or time cannot be null.");
+    public static Error EventStatusIsActive => new("The event status is active and cannot be modified.");
+    public static Error EventStatusIsCanceled => new("The event status is canceled and cannot be modified.");
+    public static Error EventStatusIsActiveAndMaxGuestsReduced => new("The event status is active and the maximum number of guests cannot be reduced.");
+    public static Error EventTimeSpanIsNotSet => new("The event start and end times are not set.");
+    public static Error EventTimeSpanIsInPast => new("The event start time is in the past, change the start time to a future date.");
+    public static Error EventTitleIsDefault => new("The event title is the default title and must be changed.");
+    public static Error InvalidEmailDomain => new("The email address domain is invalid, only people with a VIA mail can register.");
+    public static Error InvalidName => new("The provided name is invalid, only letters are allowed.");
+    public static Error InvalidEmailText1 => new("The email address text is invalid, it must be 3 or 4 uppercase/lowercase English letters, or 6 digits from 0 to 9.");
+    public static Error InvalidEmailText1Length => new("The email address text is invalid, it must be between 3 and 6 characters long.");
+    public static Error EventStatusIsNotActive => new("The event status is not active, only active events can be joined.");
+    public static Error EventIsPrivate => new("The event is private and cannot be joined, without a valid reason.");
+    public static Error GuestAlreadyParticipating => new("The guest is already participating in the event.");
+    public static Error GuestAlreadyInWaitingList => new("The guest is already in the waiting list for the event.");
+    public static Error GuestAlreadyRegisteredToEvent => new("The guest is already registered to the event.");
+    public static Error ParticipationStatusNotInvited => new("The participation status is not invited, only invited guests can accept or reject the invitation.");
+    public static Error ParticipationStatusNotPending => new("The participation status is not pending, only pending invitation can be accepted or rejected.");
+    public static Error ParticipationStatusNotConfirmed => new("The participation status is not confirmed, only confirmed guests can be removed from the event.");
+    public static Error ParticipationNotInWaitingList => new("The participation is not in the waiting list, only guests in the waiting list can be confirmed.");
+    public static Error EventStatusIsDraft => new("The event status is draft and cannot be made public.");
+    public static Error GuestNotInvitedToEvent => new("The guest is not invited to the event.");
+    public static Error GuestAlreadyRequestedToJoinEvent => new("The guest already requested to join the event.");
+    public static Error InvitationStatusNotPending => new("The invitation status is not pending, only pending invitations can be accepted or rejected.");
+    public static Error InvitationNotFound => new("The invitation was not found.");
+    public static Error ParticipationNotFound => new("The participation was not found.");
+    public static Error EventIsFull => new("The event is full and cannot accept more guests.");
+
+    public static Error TooShortName(int minLength) {
+        return new Error($"The provided name is too short, minimum length is {minLength} characters.");
+    }
+
+    public static Error TooLongName(int maxLength) {
+        return new Error($"The provided name is too long, maximum length is {maxLength} characters.");
+    }
+
+    public static Error TooFewGuests(int minGuests) {
+        return new Error($"The number of guests must be at least {minGuests}.");
+    }
+
+    public static Error TooManyGuests(int maxGuests) {
+        return new Error($"The number of guests cannot exceed {maxGuests}.");
+    }
+
+    public static Error TooShortTitle(int minTitleLength) {
+        return new Error($"The provided title is too short, minimum length is {minTitleLength} characters.");
+    }
+
+    public static Error TooLongTitle(int maxTitleLength) {
+        return new Error($"The provided title is too long, maximum length is {maxTitleLength} characters.");
+    }
+
+    public static Error TooShortDescription(int minTitleLength) {
+        return new Error($"The provided description is too short, minimum length is {minTitleLength} characters.");
+    }
+
+    public static Error TooLongDescription(int maxTitleLength) {
+        return new Error($"The provided description is too long, maximum length is {maxTitleLength} characters.");
+    }
+
+    public static Error InvalidStartDateTime(DateTime start) {
+        return new Error($"The start time {start} is invalid. Rooms are usable from 08 am on a day, to 01 am on the next day.");
+    }
+
+    public static Error InvalidEndDateTime(DateTime end) {
+        return new Error($"The end time {end} is invalid. Rooms are usable from 08 am on a day, to 01 am on the next day.");
+    }
+
+    public static Error InvalidDuration(DateTime start, DateTime end, TimeSpan maxDuration) {
+        return new Error($"The event duration from {start} to {end} is too long, maximum duration is {maxDuration}.");
+    }
+
+    public static Error EventTooShort(TimeSpan minDuration) {
+        return new Error($"The event duration is too short, minimum duration is {minDuration}.");
+    }
+
+    // Method to convert Exception to a generic Error
+    public static Error FromException(Exception exception) {
+        return new Error(exception.Message);
+    }
+
+    private void Append(Error error) {
+        if (Next is null)
+            Next = error;
+        else
+            Next.Append(error);
+    }
+
+    public static Error Add(HashSet<Error> errors) {
+        // Create a new error with the first error in the chain
+        var error = errors.First();
+        // Add the rest of the errors to the chain
+        foreach (var e in errors.Skip(1)) error.Append(e);
+
+        return error;
+    }
+
+    public IEnumerable<Error> GetAllErrors() {
+        var errors = new List<Error> {this};
+        var current = Next;
+        while (current is not null) {
+            errors.Add(current);
+            current = current.Next;
         }
 
-        public int Code { get; }
-        public string Message { get; }
-        public Error Next { get; private set; }
+        return errors;
+    }
 
+    public override string ToString() {
+        // If there are multiple errors, return a string with all of them
+        if (Next != null) return $"{Message}\n{Next}";
 
-        // Factory methods for creating specific errors
-        // public static Error NoError => new Error(0, "No error");
-        // public static Error BadRequest => new Error(400, "The request could not be understood by the server due to malformed syntax.");
-        // public static Error Unauthorized => new Error(401, "The request requires user authentication.");
-        // public static Error Forbidden => new Error(403, "The server understood the request, but is refusing to fulfill it.");
-        // public static Error NotFound => new Error(404, "The server has not found anything matching the Request-URI.");
-        // public static Error Teapot => new Error(418, "I'm a teapot. The requested entity body is short and stout. Tip me over and pour me out.");
-        // public static Error InternalServerError => new Error(500, "The server encountered an unexpected condition which prevented it from fulfilling the request.");
-        public static Error InvalidEmail => new Error(1001, "The email address provided is invalid.");
+        return Message;
+    }
 
-        // public static Error InvalidDateTime => new Error(1002, "The date or time provided does not match the expected format or is out of range.");
-        // public static Error DuplicateUID => new Error(1003, "The UID provided already exists.");
-        // public static Error EventFull => new Error(1004, "The event has reached its capacity limit. No more tickets can be sold.");
-        // public static Error PaymentRequired => new Error(1005, "Payment information is required to complete this operation.");
-        // public static Error EventCancelled => new Error(1006, "The event has been cancelled.");
-        // public static Error AccessDenied => new Error(1007, "You do not have permission to perform this action.");
-        // public static Error ResourceNotAvailable => new Error(1008, "The requested resource is not available.");
-        // public static Error ValidationFailed => new Error(1009, "Provided data did not pass validation checks.");
-        // public static Error RateLimitExceeded => new Error(1010, "Too many requests. Please try again later.");
-        public static Error InvalidDateTimeRange => new Error(1011, "The start time must be before the end time.");
-        public static Error InvalidOrganizerName => new Error(1012, "The organizer name cannot be empty.");
-        public static Error Unknown => new Error(9999, "An unknown error occurred.");
-        public static Error BlankString => new Error(1013, "The provided string cannot be blank.");
+    // Overriding the equality methods to compare value objects
+    public override bool Equals(object obj) {
+        if (obj is null || GetType() != obj.GetType())
+            return false;
 
-        public static Error TooLongString => new Error(1014, "The provided string is too long.");
-        public static Error TooShortString => new Error(1015, "The provided string is too short.");
-        public static Error EventStatusInvalid => new Error(1016, "The event status is invalid for this operation.");
-        public static Error NullString => new Error(1017, "The provided string cannot be null.");
+        if (Message != ((Error) obj).Message)
+            return false;
 
-        public static Result NullDateTime => new Error(1018, "The provided date or time cannot be null.");
+        return true;
+    }
 
-        // a failure message is returned explaining an active event cannot be modified
-        public static Error EventStatusIsActive => new(1019, "The event status is active and cannot be modified.");
-        public static Error EventStatusIsCanceled => new(1020, "The event status is canceled and cannot be modified.");
-
-        // Method to convert Exception to a generic Error
-        public static Error FromException(Exception exception) {
-            return new Error(500, exception.Message);
-        }
-
-        private void Append(Error error) {
-            if (this.Next == null)
-                this.Next = error;
-            else
-                this.Next.Append(error);
-        }
-
-        public static Error Add(HashSet<Error> errors) {
-            // Create a new error with the first error in the chain
-            var error = errors.First();
-            // Add the rest of the errors to the chain
-            foreach (var e in errors.Skip(1)) {
-                error.Append(e);
-            }
-
-            return error;
-        }
-
-        public static Error Add(Error error) {
-            var newError = new Error(error.Code, error.Message);
-            return newError;
-        }
-
-        public int Count() {
-            return Next == null ? 1 : 1 + Next.Count();
-        }
-
-        public IEnumerable<Error> GetAllErrors() {
-            var errors = new List<Error> {this};
-            var current = this.Next;
-            while (current != null) {
-                errors.Add(current);
-                current = current.Next;
-            }
-
-            return errors;
-        }
-
-        public override string ToString() {
-            // If there are multiple errors, return a string with all of them
-            if (Next != null) {
-                return $"{Message}\n{Next}";
-            }
-
-            return Message;
-        }
+    public override int GetHashCode() {
+        return Message.GetHashCode();
     }
 }

@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using ViaEventAssociation.Core.Domain.Common.Bases;
-using ViaEventAssociation.Core.Tools.OperationResult;
 
 namespace ViaEventAssociation.Core.Domain.Common.Values;
 
@@ -35,11 +34,23 @@ public class Email : ValueObject {
         if (!Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
             errors.Add(Error.InvalidEmail);
 
+        if (!Regex.IsMatch(email, @"^([\w\.\-]+)@via\.dk$"))
+            errors.Add(Error.InvalidEmailDomain);
+
+        // Separate local part from domain and check its length
+        var localPart = email.Split('@')[0];
+        if (localPart.Length < 3 || localPart.Length > 6)
+            errors.Add(Error.InvalidEmail);
+
+        // Check if local part is valid (3-4 letters or 6 digits)
+        if (!(Regex.IsMatch(localPart, @"^[a-zA-Z]{3,4}$") || Regex.IsMatch(localPart, @"^\d{6}$")))
+            errors.Add(Error.InvalidEmail);
+
         if (errors.Any())
             return Error.Add(errors);
 
         // If no errors, validation is successful
-        return Result.Success();
+        return Result.Ok;
     }
 
 

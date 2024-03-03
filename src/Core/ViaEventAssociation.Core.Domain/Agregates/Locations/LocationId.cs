@@ -1,5 +1,3 @@
-using ViaEventAssociation.Core.Tools.OperationResult;
-
 namespace ViaEventAssociation.Core.Domain.Agregates.Locations;
 
 public class LocationId : IdentityBase {

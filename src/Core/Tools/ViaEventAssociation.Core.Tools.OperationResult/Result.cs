@@ -1,5 +1,3 @@
-using ViaEventAssociation.Core.Tools.OperationResult;
-
 public class Result {
     public static readonly Result Ok = new(true, null);
 
