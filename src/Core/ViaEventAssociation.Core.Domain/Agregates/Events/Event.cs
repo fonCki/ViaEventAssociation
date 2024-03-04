@@ -10,13 +10,13 @@ public class Event : AggregateRoot<EventId> {
     public Organizer Organizer { get; private set; }
     public EventTitle Title { get; private set; }
     public EventDescription Description { get; private set; }
-    public EventDateTime TimeSpan { get; private set; }
+    public EventDateTime TimeSpan { get; set; } //TODO my setter is public for testing mode should I have a developer mode?
     internal EventVisibility Visibility { get; set; } //TODO my setter is public for testing mode should I have a developer mode?
     internal EventStatus Status { get; set; } //TODO ask troels about this this is public for testing mode
     internal int MaxNumberOfGuests { get; set; } //TODO my setter is public for testing mode should I have a developer mode?
     public HashSet<Participation> Participations { get; private set; }
 
-    private int ConfirmedParticipations => Participations.Count(p => p.ParticipationStatus is ParticipationStatus.Accepted);
+    public int ConfirmedParticipations => Participations.Count(p => p.ParticipationStatus is ParticipationStatus.Accepted);
 
     public static Result<Event> Create(Organizer organizer) {
         var newEvent = new Event(EventId.GenerateId().Payload) {
@@ -183,36 +183,23 @@ public class Event : AggregateRoot<EventId> {
         return Result.Ok;
     }
 
-    public Result ConfirmParticipation(JoinRequest joinRequest) {
-        var errors = new HashSet<Error>();
-
-        if (Status is not EventStatus.Active)
-            errors.Add(Error.EventStatusIsNotActive);
-
-        if (TimeSpan.IsPastEvent())
-            errors.Add(Error.EventTimeSpanIsInPast);
-
+    public Result<JoinRequest> ConfirmParticipation(JoinRequest joinRequest) {
         if (Visibility is EventVisibility.Private && string.IsNullOrEmpty(joinRequest.Reason))
-            errors.Add(Error.EventIsPrivate);
+            return Error.EventIsPrivate;
 
-        if (errors.Any())
-            return Error.Add(errors);
+        if (Visibility is EventVisibility.Private && !isValidReason(joinRequest.Reason))
+            return Error.JoinRequestReasonIsInvalid;
 
-        if (ConfirmedParticipations < MaxNumberOfGuests) {
-            Participations.Add(joinRequest); // I added either if private or public
-            joinRequest.AcceptJoinRequest();
-            return Result.Ok;
-        }
 
-        if (ConfirmedParticipations >= MaxNumberOfGuests) {
-            joinRequest.RejectJoinRequest();
-            return Error.EventIsFull;
-        }
-
-        return Result.Ok;
+        Participations.Add(joinRequest);
+        return joinRequest;
     }
 
-    public Result SendInvitation(Guest guest) {
+    private bool isValidReason(string? joinRequestReason) {
+        return joinRequestReason?.Length > 25;
+    }
+
+    public Result<Invitation> SendInvitation(Guest guest) {
         var errors = new HashSet<Error>();
 
         if (Status is not EventStatus.Active)
@@ -220,6 +207,9 @@ public class Event : AggregateRoot<EventId> {
 
         if (TimeSpan.IsPastEvent())
             errors.Add(Error.EventTimeSpanIsInPast);
+
+        if (ConfirmedParticipations >= MaxNumberOfGuests)
+            errors.Add(Error.EventIsFull);
 
         var participation = Invitation.SendInvitation(this, guest)
             .OnFailure(error => errors.Add(error));
@@ -229,7 +219,11 @@ public class Event : AggregateRoot<EventId> {
 
         Participations.Add(participation.Payload);
 
-        return Result.Ok;
+        return participation;
+    }
+
+    public bool IsParticipating(Guest guest) {
+        return Participations.Any(p => p.Guest == guest);
     }
 
     public override string ToString() {

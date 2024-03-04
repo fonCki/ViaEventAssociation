@@ -16,5 +16,13 @@ public abstract class DateTimeRange : ValueObject {
         yield return End;
     }
 
+    public static bool isPast(DateTimeRange dateTimeRange) {
+        return dateTimeRange.End < DateTime.Now;
+    }
+
+    public static bool isFuture(DateTimeRange dateTimeRange) {
+        return dateTimeRange.Start > DateTime.Now;
+    }
+
     public override string ToString() => $"Start: {Start}, End: {End}";
 }

@@ -57,15 +57,15 @@ public class Guest : AggregateRoot<GuestId> {
         return Result.Ok;
     }
 
-    public Result AcceptInvitation(Event @event) {
+    public Result<Invitation> AcceptInvitation(Event @event) {
         var invitation = Participations.OfType<Invitation>().FirstOrDefault(p => p.Event == @event);
         if (invitation is null)
             return Error.InvitationNotFound;
 
-        var result = invitation.AcceptInvitation();
+        var result = invitation.AcceptParticipation();
         if (result.IsFailure)
             return result.Error;
-        return Result.Ok;
+        return invitation;
     }
 
     public Result CancelParticipation(Event @event) {
@@ -78,15 +78,8 @@ public class Guest : AggregateRoot<GuestId> {
         return Result.Ok;
     }
 
-    public Result RejectInvitation(Event @event) {
-        var invitation = Participations.OfType<Invitation>().FirstOrDefault(p => p.Event == @event);
-        if (invitation is null)
-            return Error.InvitationNotFound;
-        var result = invitation.RejectInvitation();
-        if (result.IsFailure)
-            return result.Error;
-        // Participations.Remove(invitation); TODO: Troels I am not sure if we should remove the invitation from the list
-        return Result.Ok;
+    public bool IsParticipatingInEvent(Event @event) {
+        return Participations.Any(p => p.Event == @event);
     }
 
 

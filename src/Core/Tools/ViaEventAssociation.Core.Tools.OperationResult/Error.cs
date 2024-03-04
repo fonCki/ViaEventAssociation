@@ -40,6 +40,8 @@ public class Error {
     public static Error InvitationNotFound => new("The invitation was not found.");
     public static Error ParticipationNotFound => new("The participation was not found.");
     public static Error EventIsFull => new("The event is full and cannot accept more guests.");
+    public static Error EventIsPast => new("You cannot cancel your participation of past or ongoing events.");
+    public static Error JoinRequestReasonIsInvalid => new("The join request reason is invalid, only letters and numbers are allowed, and put more effort into the reason.");
 
     public static Error TooShortName(int minLength) {
         return new Error($"The provided name is too short, minimum length is {minLength} characters.");

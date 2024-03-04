@@ -8,10 +8,11 @@ public class Invitation : Participation {
     public static Result<Invitation> SendInvitation(Event @event, Guest guest) {
         var errors = new HashSet<Error>();
 
-        NoDuplicateParticipation(guest, @event)
+        ValidateParticipation(guest, @event)
             .OnFailure(error => errors.Add(error));
 
-        var participationIdResult = ParticipationId.GenerateId().OnFailure(error => errors.Add(error));
+        var participationIdResult = ParticipationId.GenerateId()
+            .OnFailure(error => errors.Add(error));
 
         if (errors.Any()) return Error.Add(errors);
 
@@ -22,19 +23,5 @@ public class Invitation : Participation {
         if (result.IsFailure) return result.Error;
 
         return participation;
-    }
-
-    public Result AcceptInvitation() {
-        if (ParticipationStatus != ParticipationStatus.Pending) return Error.InvitationStatusNotPending;
-
-        ParticipationStatus = ParticipationStatus.Accepted;
-        return Result.Ok;
-    }
-
-    public Result RejectInvitation() {
-        if (ParticipationStatus != ParticipationStatus.Pending) return Error.InvitationStatusNotPending;
-
-        ParticipationStatus = ParticipationStatus.Rejected;
-        return Result.Ok;
     }
 }
