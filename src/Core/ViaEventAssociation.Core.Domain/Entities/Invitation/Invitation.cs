@@ -18,9 +18,8 @@ public class Invitation : Participation {
 
         var participation = new Invitation(participationIdResult.Payload, @event, guest, ParticipationStatus.Pending);
 
-        var result = guest.ReceiveInvitation(participation);
-
-        if (result.IsFailure) return result.Error;
+        //Should I add the participation to the guest?
+        guest.Participations.Add(participation);
 
         return participation;
     }

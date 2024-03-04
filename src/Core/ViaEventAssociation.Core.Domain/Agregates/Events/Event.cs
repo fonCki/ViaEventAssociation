@@ -183,13 +183,12 @@ public class Event : AggregateRoot<EventId> {
         return Result.Ok;
     }
 
-    public Result<JoinRequest> ConfirmParticipation(JoinRequest joinRequest) {
+    public Result<JoinRequest> RequestToJoin(JoinRequest joinRequest) {
         if (Visibility is EventVisibility.Private && string.IsNullOrEmpty(joinRequest.Reason))
             return Error.EventIsPrivate;
 
         if (Visibility is EventVisibility.Private && !isValidReason(joinRequest.Reason))
             return Error.JoinRequestReasonIsInvalid;
-
 
         Participations.Add(joinRequest);
         return joinRequest;
@@ -200,30 +199,22 @@ public class Event : AggregateRoot<EventId> {
     }
 
     public Result<Invitation> SendInvitation(Guest guest) {
-        var errors = new HashSet<Error>();
+        var result = Invitation.SendInvitation(this, guest)
+            .OnSuccess(participation => Participations.Add(participation));
 
-        if (Status is not EventStatus.Active)
-            errors.Add(Error.EventStatusIsNotActive);
 
-        if (TimeSpan.IsPastEvent())
-            errors.Add(Error.EventTimeSpanIsInPast);
+        if (result.IsFailure)
+            return result.Error;
 
-        if (ConfirmedParticipations >= MaxNumberOfGuests)
-            errors.Add(Error.EventIsFull);
-
-        var participation = Invitation.SendInvitation(this, guest)
-            .OnFailure(error => errors.Add(error));
-
-        if (errors.Any())
-            return Error.Add(errors);
-
-        Participations.Add(participation.Payload);
-
-        return participation;
+        return result.Payload;
     }
 
     public bool IsParticipating(Guest guest) {
         return Participations.Any(p => p.Guest == guest);
+    }
+
+    public bool IsInvitedButNotConfirmed(Guest guest) {
+        return Participations.OfType<Invitation>().Any(p => p.Guest == guest && p.ParticipationStatus is ParticipationStatus.Pending);
     }
 
     public override string ToString() {

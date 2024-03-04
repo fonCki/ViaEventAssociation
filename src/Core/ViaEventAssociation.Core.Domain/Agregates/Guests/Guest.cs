@@ -43,18 +43,13 @@ public class Guest : AggregateRoot<GuestId> {
     }
 
     public Result<JoinRequest> RegisterToEvent(Event @event, string reason = null!) {
-        var participationResult = JoinRequest.SubmitJoinRequest(@event, this, reason)
+        var participationResult = JoinRequest.SendJoinRequest(@event, this, reason)
             .OnSuccess(participation => Participations.Add(participation));
 
         if (participationResult.IsFailure)
             return participationResult.Error;
 
         return participationResult.Payload;
-    }
-
-    public Result ReceiveInvitation(Invitation invitation) {
-        Participations.Add(invitation);
-        return Result.Ok;
     }
 
     public Result<Invitation> AcceptInvitation(Event @event) {
@@ -78,8 +73,12 @@ public class Guest : AggregateRoot<GuestId> {
         return Result.Ok;
     }
 
-    public bool IsParticipatingInEvent(Event @event) {
-        return Participations.Any(p => p.Event == @event);
+    public bool IsConfirmedInEvent(Event @event) {
+        return Participations.Any(p => p.Event == @event && p.ParticipationStatus == ParticipationStatus.Accepted);
+    }
+
+    public bool IsPendingInEvent(Event @event) {
+        return Participations.Any(p => p.Event == @event && p.ParticipationStatus == ParticipationStatus.Pending);
     }
 
 

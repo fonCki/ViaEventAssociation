@@ -9,7 +9,7 @@ public class JoinRequest : Participation {
 
     public string? Reason { get; private set; }
 
-    public static Result<JoinRequest> SubmitJoinRequest(Event @event, Guest guest, string reason = null) {
+    public static Result<JoinRequest> SendJoinRequest(Event @event, Guest guest, string reason = null) {
         var errors = new HashSet<Error>();
 
         ValidateParticipation(guest, @event)
@@ -18,17 +18,14 @@ public class JoinRequest : Participation {
         var participationIdResult = ParticipationId.GenerateId()
             .OnFailure(error => errors.Add(error));
 
+        var participation = new JoinRequest(participationIdResult.Payload, @event, guest, reason, ParticipationStatus.Pending);
+
+        @event.RequestToJoin(participation)
+            .OnFailure(error => errors.Add(error))
+            .OnSuccess(() => participation.ParticipationStatus = ParticipationStatus.Accepted);
+
         if (errors.Any())
             return Error.Add(errors);
-
-        var participation = new JoinRequest(participationIdResult.Payload, @event, guest, reason, ParticipationStatus.Pending);
-        var confirmParticipation = @event.ConfirmParticipation(participation);
-
-        if (confirmParticipation.IsFailure)
-            return confirmParticipation.Error;
-
-        //update the ParticipationStatus in the participation
-        participation.ParticipationStatus = ParticipationStatus.Accepted;
 
         return participation;
     }

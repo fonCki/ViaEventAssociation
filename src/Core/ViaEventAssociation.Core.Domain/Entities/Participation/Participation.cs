@@ -33,11 +33,11 @@ public abstract class Participation : Entity<ParticipationId> {
             return Error.EventTimeSpanIsInPast;
 
         // Check if the user is already registered to the event
-        if (guest.IsParticipatingInEvent(@event))
+        if (guest.IsPendingInEvent(@event) || guest.IsConfirmedInEvent(@event))
             return Error.GuestAlreadyParticipating;
 
         // Check if the user already requested to join the event
-        if (@event.IsParticipating(guest))
+        if (@event.IsParticipating(guest) || @event.IsInvitedButNotConfirmed(guest))
             return Error.GuestAlreadyRequestedToJoinEvent;
 
         return Result.Ok;
@@ -46,8 +46,6 @@ public abstract class Participation : Entity<ParticipationId> {
     public Result CancelParticipation() {
         if (DateTimeRange.isPast(Event.TimeSpan))
             return Error.EventIsPast;
-
-        ParticipationStatus = ParticipationStatus.Cancelled;
 
         //Ad, remove participation from guest and from event
         //TODO troels: should I handle this from here?

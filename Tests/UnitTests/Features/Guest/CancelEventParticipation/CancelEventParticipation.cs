@@ -24,7 +24,7 @@ public class CancelEventParticipation {
         //Assert
         Assert.True(result.IsSuccess);
         Assert.False(@event.IsParticipating(guest));
-        Assert.False(guest.IsParticipatingInEvent(@event));
+        Assert.False(guest.IsConfirmedInEvent(@event));
     }
 
     //Given an existing event with ID, and a registered guest with ID, and the guest is not marked as participating in the event, when the guest chooses to cancel their participation, then nothing changes

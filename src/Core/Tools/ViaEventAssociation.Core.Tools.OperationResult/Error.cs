@@ -28,7 +28,6 @@ public class Error {
     public static Error EventIsPrivate => new("The event is private and cannot be joined, without a valid reason.");
     public static Error GuestAlreadyParticipating => new("The guest is already participating in the event.");
     public static Error GuestAlreadyInWaitingList => new("The guest is already in the waiting list for the event.");
-    public static Error GuestAlreadyRegisteredToEvent => new("The guest is already registered to the event.");
     public static Error ParticipationStatusNotInvited => new("The participation status is not invited, only invited guests can accept or reject the invitation.");
     public static Error ParticipationStatusNotPending => new("The participation status is not pending, only pending invitation can be accepted or rejected.");
     public static Error ParticipationStatusNotConfirmed => new("The participation status is not confirmed, only confirmed guests can be removed from the event.");
