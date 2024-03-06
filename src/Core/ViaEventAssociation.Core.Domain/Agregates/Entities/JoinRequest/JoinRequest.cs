@@ -12,9 +12,6 @@ public class JoinRequest : Participation {
     public static Result<JoinRequest> SendJoinRequest(Event @event, Guest guest, string reason = null) {
         var errors = new HashSet<Error>();
 
-        ValidateParticipation(guest, @event)
-            .OnFailure(error => errors.Add(error));
-
         var participationIdResult = ParticipationId.GenerateId()
             .OnFailure(error => errors.Add(error));
 
@@ -22,7 +19,7 @@ public class JoinRequest : Participation {
 
         @event.RequestToJoin(participation)
             .OnFailure(error => errors.Add(error))
-            .OnSuccess(() => participation.ParticipationStatus = ParticipationStatus.Accepted);
+            .OnSuccess(status => participation.ParticipationStatus = status);
 
         if (errors.Any())
             return Error.Add(errors);

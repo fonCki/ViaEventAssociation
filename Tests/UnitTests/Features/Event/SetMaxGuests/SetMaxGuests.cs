@@ -24,7 +24,7 @@ public class SetMaxGuests {
         @event.SetMaxGuests(maxGuests);
 
         // Assert
-        Assert.Equal(maxGuests, @event.MaxNumberOfGuests);
+        Assert.Equal(maxGuests, @event.MaxNumberOfGuests.Value);
     }
 
     // Given an existing event with ID, and the event status is draft or ready, when creator sets the maximum number of guests, then the maximum number of guests is set to the selected value
@@ -48,7 +48,7 @@ public class SetMaxGuests {
         @event.SetMaxGuests(maxGuests);
 
         // Assert
-        Assert.Equal(maxGuests, @event.MaxNumberOfGuests);
+        Assert.Equal(maxGuests, @event.MaxNumberOfGuests.Value);
     }
 
     // Given an existing event with ID, and the event is in active status, when creator sets the maximum number of guests, then the maximum number of guests is set to the selected value
@@ -68,7 +68,7 @@ public class SetMaxGuests {
         @event.SetMaxGuests(maxGuests);
 
         // Assert
-        Assert.Equal(maxGuests, @event.MaxNumberOfGuests);
+        Assert.Equal(maxGuests, @event.MaxNumberOfGuests.Value);
     }
 
     // Given an existing event with ID, and the event is in active status, when creator reduces the number of maximum guests, then a failure message is provided explaining the maximum number of guests of an active cannot be reduced (it may only be increased)

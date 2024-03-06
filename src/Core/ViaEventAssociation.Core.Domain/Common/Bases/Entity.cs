@@ -19,6 +19,7 @@ public abstract class Entity<TId> where TId : ValueObject {
         return Id.GetHashCode();
     }
 
+
     public override string ToString() {
         return $"{nameof(Entity<TId>)}: {nameof(Id)}: {Id}";
     }

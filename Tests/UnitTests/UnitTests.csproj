@@ -28,7 +28,6 @@
     <ItemGroup>
         <Folder Include="Common\Values\"/>
         <Folder Include="Features\Guest\GetInvited\"/>
-        <Folder Include="Features\Guest\RejectInvitation\"/>
     </ItemGroup>
 
 </Project>

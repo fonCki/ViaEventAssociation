@@ -24,7 +24,7 @@ public class CancelEventParticipation {
         //Assert
         Assert.True(result.IsSuccess);
         Assert.False(@event.IsParticipating(guest));
-        Assert.False(guest.IsConfirmedInEvent(@event));
+        Assert.False(guest.IsConfirmedInEvent(@event).Payload);
     }
 
     //Given an existing event with ID, and a registered guest with ID, and the guest is not marked as participating in the event, when the guest chooses to cancel their participation, then nothing changes
@@ -58,16 +58,15 @@ public class CancelEventParticipation {
     public void GuestCancelsParticipation_WithValidEventAndGuestParticipatingAndEventInPast_ShouldNotChangeParticipation() {
         //Arrange
         var @event = EventFactory.Init()
-            .WithValidTimeInFuture()
-            .WithMaxNumberOfGuests(5)
             .WithStatus(EventStatus.Active)
             .WithVisibility(EventVisibility.Public)
+            .WithValidTimeInFuture()
             .WithValidConfirmedAttendees(1)
+            .WithValidTimeInPast()
             .Build();
 
 
         var guest = @event.Participations.First().Guest;
-        @event.TimeSpan = EventDateTime.Create(DateTime.Now.AddDays(-1), DateTime.Now.AddHours(1).AddDays(-1)).Payload;
 
         //Act
         var result = guest.CancelParticipation(@event);

@@ -16,7 +16,7 @@ public class CreateEvent {
 
         // Assert
         Assert.Equal(EventStatus.Draft, @event.Status);
-        Assert.Equal(5, @event.MaxNumberOfGuests);
+        Assert.Equal(5, @event.MaxNumberOfGuests.Value);
     }
 
     // Create event with null id should produce title "Working Title"
@@ -49,10 +49,6 @@ public class CreateEvent {
     }
 
     //S4
-    // Given an Id
-    // When creator selects to create an event
-    // Then the event is created
-    // And the visibility of the event is private
 
     [Fact]
     public void CreateEvent_WithNullId_ProducePrivateVisibility() {

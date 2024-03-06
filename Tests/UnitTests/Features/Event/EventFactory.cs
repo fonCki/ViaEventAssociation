@@ -1,5 +1,6 @@
 using ViaEventAssociation.Core.Domain.Agregates.Events;
 using ViaEventAssociation.Core.Domain.Agregates.Organizer;
+using ViaEventAssociation.Core.Domain.Common.Values;
 
 
 //TODO: I am changinng the update Status to be a method in the Event class
@@ -29,7 +30,7 @@ public class EventFactory {
     }
 
     public EventFactory WithMaxNumberOfGuests(int maxNumberOfGuests) {
-        _event.MaxNumberOfGuests = maxNumberOfGuests;
+        _event.MaxNumberOfGuests = NumberOfGuests.Create(maxNumberOfGuests).Payload;
         return this;
     }
 
@@ -45,6 +46,13 @@ public class EventFactory {
         return _event;
     }
 
+    public EventFactory WithTimeSpan(DateTime start, DateTime end) {
+        var newTimeSpan = EventDateTime.Create(start, end).OnFailure(error => throw new Exception("Invalid time span"));
+
+        _event.TimeSpan = newTimeSpan.Payload;
+        return this;
+    }
+
     public EventFactory WithValidTimeInFuture() {
         // Create the start DateTime by combining the date and time
         var startDate = DateTime.Today.AddDays(1);
@@ -57,7 +65,9 @@ public class EventFactory {
         var endDateTime = endDate.Add(endTime);
 
         // Update the event with the new start and end DateTimes
-        _event.UpdateTimeSpan(startDateTime, endDateTime);
+        var newTimeSpan = EventDateTime.Create(startDateTime, endDateTime).OnFailure(error => throw new Exception("Invalid time span"));
+
+        _event.TimeSpan = newTimeSpan.Payload;
 
         return this;
     }
@@ -74,26 +84,28 @@ public class EventFactory {
         var endDateTime = endDate.Add(endTime);
 
         // Update the event with the new start and end DateTimes
-        _event.UpdateTimeSpan(startDateTime, endDateTime);
+        var newTimeSpan = EventDateTime.Create(startDateTime, endDateTime).OnFailure(error => throw new Exception("Invalid time span"));
+
+        _event.TimeSpan = newTimeSpan.Payload;
 
         return this;
     }
 
     public EventFactory WithValidTitle() {
-        _event.UpdateTitle("Valid Title");
+        _event.Title = EventTitle.Create("Valid Title").Payload;
         return this;
     }
 
     public EventFactory WithValidDescription() {
-        _event.UpdateDescription("Valid Description");
+        _event.Description = EventDescription.Create("Valid Description").Payload;
         return this;
     }
 
 
     public EventFactory WithValidConfirmedAttendees(int confirmedAttendees) {
         var startEmailCount = 999999;
-        for (var i = startEmailCount; i > startEmailCount - confirmedAttendees; i--) CreateAndRegisterGuest("John", "Doe", $"{i}@via.dk");
-
+        for (var i = startEmailCount; i > startEmailCount - confirmedAttendees; i--)
+            CreateAndRegisterGuest("John", "Doe", $"{i}@via.dk");
         return this;
     }
 

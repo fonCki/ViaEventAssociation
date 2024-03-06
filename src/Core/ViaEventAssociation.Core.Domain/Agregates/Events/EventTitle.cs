@@ -3,9 +3,6 @@ using ViaEventAssociation.Core.Domain.Common.Bases;
 namespace ViaEventAssociation.Core.Domain.Agregates.Events;
 
 public class EventTitle : ValueObject {
-    private static readonly int MIN_TITLE_LENGTH = 3;
-    private static readonly int MAX_TITLE_LENGTH = 75;
-
     private EventTitle(string title) {
         Value = title;
     }
@@ -33,11 +30,11 @@ public class EventTitle : ValueObject {
         if (string.IsNullOrWhiteSpace(title))
             errors.Add(Error.BlankString);
 
-        if (title.Length < MIN_TITLE_LENGTH)
-            errors.Add(Error.TooShortTitle(MIN_TITLE_LENGTH));
+        if (title.Length < CONST.MIN_TITLE_LENGTH)
+            errors.Add(Error.TooShortTitle(CONST.MIN_TITLE_LENGTH));
 
-        if (title.Length > MAX_TITLE_LENGTH)
-            errors.Add(Error.TooLongTitle(MAX_TITLE_LENGTH));
+        if (title.Length > CONST.MAX_TITLE_LENGTH)
+            errors.Add(Error.TooLongTitle(CONST.MAX_TITLE_LENGTH));
         if (errors.Any())
             return Error.Add(errors);
 

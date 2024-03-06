@@ -41,6 +41,24 @@ public class Error {
     public static Error EventIsFull => new("The event is full and cannot accept more guests.");
     public static Error EventIsPast => new("You cannot cancel your participation of past or ongoing events.");
     public static Error JoinRequestReasonIsInvalid => new("The join request reason is invalid, only letters and numbers are allowed, and put more effort into the reason.");
+    public static Error InvitationPendingNotFound => new("The pending invitation was not found, only pending invitations can be accepted or rejected.");
+    public static Error InvitationPendingOrAcceptedNotFound => new("The pending or accepted invitation was not found, only pending or accepted invitations can be rejected.");
+    public static Error EventStatusIsCanceledAndCannotRejectInvitation => new("The event status is canceled and the invitation cannot be rejected.");
+    public static Error EventStatusIsReadyAndCannotRejectInvitation => new("The event status is ready and the invitation cannot be rejected.");
+    public static Error OnlyActiveEventsCanBeCanceled => new("Only active events can be canceled.");
+    public static Error DuplicateDateTimeRange => new("The event date and time range is already taken.");
+    public static Error EventAlreadyExistsInLocation => new("The event already exists in the location.");
+    public static Error EventTimeSpanOverlapsWithAnotherEvent => new("The time span overlaps with an existing event.");
+    public static Error EventMaxNumberOfGuestsExceedsLocationMaxNumberOfGuests => new("The maximum number of guests exceeds the location's maximum number of guests.");
+    public static Error LocationIsUnavailable => new("The location is unavailable.");
+    public static Error LocationMaxNumberOfGuestsExceedsEventMaxNumberOfGuests => new("The location's maximum number of guests exceeds the event's maximum number of guests.");
+    public static Error StartTimeIsInThePast => new("The start time is in the past.");
+    public static Error LocationNotAvailable => new("The location is not available for the given time range.");
+    public static Error EventTimeSpanOverlapsWithNewAvailability => new("The event time span overlaps with the new availability.");
+    public static Error EventTimeSpanOutsideOfNewAvailability => new("The event time span is outside of the new availability.");
+    public static Error JoinRequestReasonIsMissing => new("The join request reason is missing, a reason is required for private events.");
+    public static Error EventStatusIsNotActiveOrReady => new("The event status is not active or ready, only active or ready events can be send invitations.");
+    public static Error GuestAlreadyInvited => new("The guest is already invited to the event.");
 
     public static Error TooShortName(int minLength) {
         return new Error($"The provided name is too short, minimum length is {minLength} characters.");
