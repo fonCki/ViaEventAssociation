@@ -5,8 +5,10 @@ namespace UnitTests.Features.Event.InviteGuest;
 public class InviteGuest {
     //Given an existing event with ID, and the event status is ready or active, and a registered guest with ID, when the creator invites a guest, then a pending guest invitation is registered on the event
     //ID:UC13.S1
-    [Fact]
-    public void CreatorInvitesGuest_WithValidEventAndGuest_ShouldReturnSuccess() {
+    [Theory]
+    [InlineData(EventStatus.Ready)]
+    [InlineData(EventStatus.Active)]
+    public void CreatorInvitesGuest_WithValidEventAndGuest_ShouldReturnSuccess(EventStatus eventStatus) {
         //Arrange
         var guest = GuestFactory
             .InitWithDefaultsValues()
@@ -14,7 +16,7 @@ public class InviteGuest {
 
         var @event = EventFactory.Init()
             .WithValidTimeInFuture()
-            .WithStatus(EventStatus.Active)
+            .WithStatus(eventStatus)
             .WithVisibility(EventVisibility.Public)
             .Build();
 

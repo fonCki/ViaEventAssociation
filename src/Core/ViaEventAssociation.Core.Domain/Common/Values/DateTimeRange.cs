@@ -35,7 +35,7 @@ public class DateTimeRange : ValueObject {
     }
 
     public static bool isPast(DateTimeRange dateTimeRange) {
-        return dateTimeRange.End < DateTime.Now;
+        return dateTimeRange.Start < DateTime.Now;
     }
 
     public static bool isFuture(DateTimeRange dateTimeRange) {

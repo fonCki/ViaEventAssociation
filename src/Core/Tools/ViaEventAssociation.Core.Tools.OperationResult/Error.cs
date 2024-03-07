@@ -56,9 +56,9 @@ public class Error {
     public static Error LocationNotAvailable => new("The location is not available for the given time range.");
     public static Error EventTimeSpanOverlapsWithNewAvailability => new("The event time span overlaps with the new availability.");
     public static Error EventTimeSpanOutsideOfNewAvailability => new("The event time span is outside of the new availability.");
-    public static Error JoinRequestReasonIsMissing => new("The join request reason is missing, a reason is required for private events.");
     public static Error EventStatusIsNotActiveOrReady => new("The event status is not active or ready, only active or ready events can be send invitations.");
     public static Error GuestAlreadyInvited => new("The guest is already invited to the event.");
+    public static Error LocationAlreadyAssociatedWithAnotherEvent => new("The location is already associated with another event.");
 
     public static Error TooShortName(int minLength) {
         return new Error($"The provided name is too short, minimum length is {minLength} characters.");

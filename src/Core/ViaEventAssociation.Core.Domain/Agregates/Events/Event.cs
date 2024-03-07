@@ -209,14 +209,14 @@ public class Event : AggregateRoot<EventId> {
             errors.Add(Error.EventTimeSpanIsInPast);
 
         if (Visibility is EventVisibility.Private && string.IsNullOrEmpty(joinRequest.Reason))
-            errors.Add(Error.JoinRequestReasonIsMissing);
+            errors.Add(Error.EventIsPrivate);
 
         if (errors.Any())
             return Error.Add(errors);
 
         Participations.Add(joinRequest);
 
-        return Visibility is EventVisibility.Private && !isValidReason(joinRequest.Reason) ? ParticipationStatus.Accepted : ParticipationStatus.Declined;
+        return Visibility is EventVisibility.Private && !isValidReason(joinRequest.Reason) ? ParticipationStatus.Declined : ParticipationStatus.Accepted;
     }
 
     private bool isValidReason(string? joinRequestReason) {
@@ -229,7 +229,7 @@ public class Event : AggregateRoot<EventId> {
         if (ConfirmedParticipations >= MaxNumberOfGuests.Value)
             errors.Add(Error.EventIsFull);
 
-        if (Status is not EventStatus.Active || Status is not EventStatus.Ready)
+        if (Status is not EventStatus.Active && Status is not EventStatus.Ready)
             errors.Add(Error.EventStatusIsNotActive);
 
         if (DateTimeRange.isPast(TimeSpan))
@@ -254,7 +254,8 @@ public class Event : AggregateRoot<EventId> {
         if (Participations.FirstOrDefault(p => p.Event == invitation.Event) is null)
             errors.Add(Error.InvitationNotFound);
 
-        if (Participations.FirstOrDefault(p => p.Event == invitation.Event && p.ParticipationStatus == ParticipationStatus.Accepted) is not null)
+        // find p => p.Event == invitation.Event && p.ParticipationStatus == ParticipationStatus.Accepted
+        if (Participations.FirstOrDefault(p => p.Event == invitation.Event).ParticipationStatus != ParticipationStatus.Accepted)
             errors.Add(Error.GuestAlreadyParticipating);
 
         if (Status is not EventStatus.Active)
@@ -296,27 +297,11 @@ public class Event : AggregateRoot<EventId> {
         return Participations.OfType<Invitation>().Any(p => p.Guest == guest && p.ParticipationStatus is ParticipationStatus.Pending);
     }
 
-    public Result setLocation(Location location) {
-        var errors = new HashSet<Error>();
-
-        if (Status is EventStatus.Active)
-            errors.Add(Error.EventStatusIsActive);
-
-        if (Status is EventStatus.Canceled)
-            errors.Add(Error.EventStatusIsCanceled);
-
-        if (location.MaxNumberOfGuests.Value < MaxNumberOfGuests.Value)
-            errors.Add(Error.EventMaxNumberOfGuestsExceedsLocationMaxNumberOfGuests);
-
-        location.AddEvent(this)
-            .OnFailure(error => errors.Add(error));
-
-        if (errors.Any())
-            return Error.Add(errors);
-
+    public Result AddLocation(Location location) {
         Location = location;
         return Result.Ok;
     }
+
 
     public bool isEventPast() {
         return DateTimeRange.isPast(TimeSpan);

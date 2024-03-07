@@ -47,7 +47,8 @@ public class EventFactory {
     }
 
     public EventFactory WithTimeSpan(DateTime start, DateTime end) {
-        var newTimeSpan = EventDateTime.Create(start, end).OnFailure(error => throw new Exception("Invalid time span"));
+        var newTimeSpan = EventDateTime.Create(start, end)
+            .OnFailure(error => throw new Exception("Invalid time span"));
 
         _event.TimeSpan = newTimeSpan.Payload;
         return this;

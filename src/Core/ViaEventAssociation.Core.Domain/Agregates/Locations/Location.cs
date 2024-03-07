@@ -38,26 +38,13 @@ public class Location {
     }
 
     public Result AddEvent(Event @event) {
-        var errors = new HashSet<Error>();
+        try {
+            Events.Add(@event);
+        }
+        catch (Exception exception) {
+            return Error.FromException(exception);
+        }
 
-
-        if (Events.Contains(@event))
-            errors.Add(Error.EventAlreadyExistsInLocation);
-
-        if (@event.MaxNumberOfGuests.Value > MaxNumberOfGuests.Value)
-            errors.Add(Error.EventMaxNumberOfGuestsExceedsLocationMaxNumberOfGuests);
-
-        if (Events.Any(e => !(e.TimeSpan.End <= @event.TimeSpan.Start || e.TimeSpan.Start >= @event.TimeSpan.End)))
-            errors.Add(Error.EventTimeSpanOverlapsWithAnotherEvent);
-
-        if (IsEventWithinTimeSpan(@event, AvailableTimeSpan))
-            errors.Add(Error.EventTimeSpanOutsideOfNewAvailability);
-
-        if (errors.Any())
-            return Result.Fail(Error.Add(errors));
-        { }
-
-        Events.Add(@event);
         return Result.Ok;
     }
 
@@ -73,6 +60,9 @@ public class Location {
 
     public Result setsAvailableTimeSpan(DateTimeRange timeRange) {
         var errors = new HashSet<Error>();
+
+        if (DateTimeRange.isPast(timeRange))
+            errors.Add(Error.StartTimeIsInThePast);
 
         // Check if any event is outside the new availability time span.
         foreach (var @event in Events)

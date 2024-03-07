@@ -1,6 +1,32 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/alfonsoridao/Library/Caches/JetBrains/Rider2024.1/resharper-host/temp/Rider/vAny/CoverageData/_ViaEventAssociation.-1914708684/Snapshot/snapshot.utdcvr</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=25c112bf_002Ddb8b_002D42ea_002D826d_002De294be06bee6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GuestCancelsParticipation_WithValidEventAndGuestNotParticipating_ShouldNotChangeParticipation" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::CancelEventParticipation.GuestCancelsParticipation_WithValidEventAndGuestNotParticipating_ShouldNotChangeParticipation&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2d93f672_002D62e4_002D43e3_002Da51c_002Deefb6f14c8af/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreatorInvitesGuest_WithValidEventAndGuest_ShouldReturnSuccess" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Event.InviteGuest.InviteGuest.CreatorInvitesGuest_WithValidEventAndGuest_ShouldReturnSuccess&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=392b5de2_002D4b44_002D4a55_002Dae4c_002D0b6d703d09b2/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=393e71a5_002Dc3db_002D40c4_002D94b6_002D6be805459b61/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="SetLocation_ValidLocation_LocationSet" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Event.SetLocation.SetLocation.SetLocation_ValidLocation_LocationSet&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b285f7e_002D435b_002D4f74_002D96be_002Db30f498a8499/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GuestAcceptsInvitation_WithValidData_ShouldReturnSuccess" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Guest.AcceptInvitation.AcceptsInvitation.GuestAcceptsInvitation_WithValidData_ShouldReturnSuccess&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=66ed9a0b_002D7dbd_002D4f3d_002Dab48_002Dd2524aceafb7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GuestParticipatePublicEvent_WithMaxNumberOfGuests_ShouldReturnFailure" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Guest.ParticipatePublicEvent.GuestParticipatePublicEvent.GuestParticipatePublicEvent_WithMaxNumberOfGuests_ShouldReturnFailure&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	
 	
@@ -8,10 +34,22 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=84d52ae5_002Ddfba_002D46f5_002D99f1_002D19df7226dc57/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=94215564_002Dbc8b_002D4dc7_002D9780_002Da00e4a0b75f1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=94215564_002Dbc8b_002D4dc7_002D9780_002Da00e4a0b75f1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dd3fc3f2_002Dcf2e_002D4b4e_002Db634_002D7a0135db7a14/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="SetLocation_ValidLocation_LocationSet #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Event.SetLocation.SetLocation.SetLocation_ValidLocation_LocationSet&lt;/TestId&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Event.SetLocation.SetLocation.SetLocation_LocationAlreadyAssociatedWithAnotherEvent_FailureMessageReturned&lt;/TestId&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Event.SetLocation.SetLocation.SetLocation_LocationNotAvailableDuringEventTime_FailureMessageReturned&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e6b60938_002D3776_002D4bd6_002D880e_002Deb344617f7ab/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f1c8de57_002De917_002D40f5_002Db933_002D559bd02057d0/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="CreatorInvitesGuest_WithValidEventAndGuest_ShouldReturnSuccess #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Event.InviteGuest.InviteGuest.CreatorInvitesGuest_WithValidEventAndGuest_ShouldReturnSuccess&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

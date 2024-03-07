@@ -57,7 +57,7 @@ public class GuestParticipatePublicEvent {
     // ID:UC11.F2
     [Theory]
     [InlineData(10)]
-    [InlineData(100)]
+    [InlineData(50)]
     public void GuestParticipatePublicEvent_WithMaxNumberOfGuests_ShouldReturnFailure(int maxNumberOfGuests) {
         //Arrange
         var guest = GuestFactory
@@ -76,7 +76,6 @@ public class GuestParticipatePublicEvent {
         var result = guest.RegisterToEvent(newEvent);
 
         //Assert
-        // _testOutputHelper.WriteLine(result.Payload.Event.Participations.Count.ToString());
         Assert.True(result.IsFailure);
         Assert.Equal(Error.EventIsFull, result.Error);
     }

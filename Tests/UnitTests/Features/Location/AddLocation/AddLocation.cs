@@ -30,26 +30,13 @@ public class AddLocation {
     // Create location with null id should produce draft status, and the maximum number of guests is 5
     // ID:UC16.S3
     [Fact]
-    public void AddLocation_WithValidNameAndMaxGuests_ShouldReturnNameWorkingTitle() {
+    public void AddLocation_WithValidNameAndMaxGuests_ShouldReturnAnEmptyListOfEvents() {
         // Arrange
 
         // Act
         var result = Location.Create();
 
         // Assert
-        Assert.Equal("Working Title", result.Payload.Name.Value);
+        Assert.Empty(result.Payload.Events);
     }
-
-    // Create location with null id should produce draft status, and the maximum number of guests is 5
-    // ID:UC16.S4
-    // [Fact]
-    // public void AddLocation_WithValidNameAndMaxGuests_ShouldReturnAvailableTrue() {
-    //     // Arrange
-    //
-    //     // Act
-    //     var result = Location.Create();
-    //
-    //     // Assert
-    //     Assert.True(result.Payload.Available);
-    // }
 }
