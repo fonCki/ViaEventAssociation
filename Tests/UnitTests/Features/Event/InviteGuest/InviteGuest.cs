@@ -32,7 +32,7 @@ public class InviteGuest {
     //ID:UC13.F1
     [Theory]
     [InlineData(EventStatus.Draft)]
-    [InlineData(EventStatus.Canceled)]
+    [InlineData(EventStatus.Cancelled)]
     public void CreatorInvitesGuest_WithInvalidEventStatus_ShouldReturnFailure(EventStatus eventStatus) {
         //Arrange
         var guest = GuestFactory

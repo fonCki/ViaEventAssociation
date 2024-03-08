@@ -43,7 +43,7 @@ public class Event : AggregateRoot<EventId> {
         if (Status is EventStatus.Active)
             errors.Add(Error.EventStatusIsActive);
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceled);
 
         // If there are any errors, return them
@@ -66,7 +66,7 @@ public class Event : AggregateRoot<EventId> {
         if (Status is EventStatus.Active)
             errors.Add(Error.EventStatusIsActive);
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceled);
 
         // If there are any errors, return them
@@ -89,7 +89,7 @@ public class Event : AggregateRoot<EventId> {
         if (Status is EventStatus.Active)
             errors.Add(Error.EventStatusIsActive);
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceled);
 
         // If there are any errors, return them
@@ -103,7 +103,7 @@ public class Event : AggregateRoot<EventId> {
     }
 
     public Result MakePublic() {
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             return Result.Fail(Error.EventStatusIsCanceled);
 
         Visibility = EventVisibility.Public;
@@ -114,7 +114,7 @@ public class Event : AggregateRoot<EventId> {
         if (Status is EventStatus.Active)
             return Result.Fail(Error.EventStatusIsActive);
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             return Result.Fail(Error.EventStatusIsCanceled);
 
         Visibility = EventVisibility.Private;
@@ -128,7 +128,7 @@ public class Event : AggregateRoot<EventId> {
         if (Status is EventStatus.Active && maxGuests < MaxNumberOfGuests.Value)
             errors.Add(Error.EventStatusIsActiveAndMaxGuestsReduced);
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceled);
 
         if (maxGuests < CONST.MIN_NUMBER_OF_GUESTS)
@@ -150,7 +150,7 @@ public class Event : AggregateRoot<EventId> {
         if (TimeSpan is null)
             errors.Add(Error.EventTimeSpanIsNotSet);
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceled);
 
         if (TimeSpan is not null && TimeSpan?.Start! < DateTime.Now)
@@ -170,14 +170,14 @@ public class Event : AggregateRoot<EventId> {
         if (Status is not EventStatus.Active)
             return Result.Fail(Error.OnlyActiveEventsCanBeCanceled);
 
-        Status = EventStatus.Canceled;
+        Status = EventStatus.Cancelled;
         return Result.Ok;
     }
 
     public Result Activate() {
         var errors = new HashSet<Error>();
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceled);
 
         if (TimeSpan is not null && TimeSpan?.Start! < DateTime.Now)
@@ -216,7 +216,15 @@ public class Event : AggregateRoot<EventId> {
 
         Participations.Add(joinRequest);
 
-        return Visibility is EventVisibility.Private && !isValidReason(joinRequest.Reason) ? ParticipationStatus.Declined : ParticipationStatus.Accepted;
+        if (Visibility is EventVisibility.Private &&
+            !isValidReason(joinRequest.Reason))
+            return ParticipationStatus.Declined;
+
+        if (Visibility is EventVisibility.Private &&
+            isValidReason(joinRequest.Reason))
+            return ParticipationStatus.Pending;
+
+        return ParticipationStatus.Accepted;
     }
 
     private bool isValidReason(string? joinRequestReason) {
@@ -254,7 +262,6 @@ public class Event : AggregateRoot<EventId> {
         if (Participations.FirstOrDefault(p => p.Event == invitation.Event) is null)
             errors.Add(Error.InvitationNotFound);
 
-        // find p => p.Event == invitation.Event && p.ParticipationStatus == ParticipationStatus.Accepted
         if (Participations.FirstOrDefault(p => p.Event == invitation.Event).ParticipationStatus != ParticipationStatus.Accepted)
             errors.Add(Error.GuestAlreadyParticipating);
 
@@ -276,7 +283,7 @@ public class Event : AggregateRoot<EventId> {
     public Result ValidateInvitationDecline(Invitation invitation) {
         var errors = new HashSet<Error>();
 
-        if (Status is EventStatus.Canceled)
+        if (Status is EventStatus.Cancelled)
             errors.Add(Error.EventStatusIsCanceledAndCannotRejectInvitation);
 
         if (Status is EventStatus.Ready)
@@ -288,6 +295,57 @@ public class Event : AggregateRoot<EventId> {
         return Result.Ok;
     }
 
+    public Result ApproveJoinRequest(Guest guest) {
+        var errors = new HashSet<Error>();
+
+        var participation = Participations.OfType<JoinRequest>().FirstOrDefault(p => p.Guest == guest);
+
+        if (participation is null)
+            errors.Add(Error.JoinRequestNotFound);
+
+        if (participation is not null && participation.ParticipationStatus is not ParticipationStatus.Pending)
+            errors.Add(Error.JoinRequestIsNotPending);
+
+        if (Status is not EventStatus.Active)
+            errors.Add(Error.EventStatusIsNotActive);
+
+        if (DateTimeRange.isPast(TimeSpan))
+            errors.Add(Error.EventTimeSpanIsInPast);
+
+        if (ConfirmedParticipations >= MaxNumberOfGuests.Value)
+            errors.Add(Error.EventIsFull);
+
+        if (errors.Any())
+            return Error.Add(errors);
+
+        return participation!.AcceptJoinRequest();
+    }
+
+    public Result DeclineJoinRequest(Guest guest) {
+        var errors = new HashSet<Error>();
+
+        var participation = Participations.OfType<JoinRequest>().FirstOrDefault(p => p.Guest == guest);
+
+        if (participation is null)
+            errors.Add(Error.JoinRequestNotFound);
+
+        if (participation is not null && participation.ParticipationStatus is not ParticipationStatus.Pending)
+            errors.Add(Error.JoinRequestIsNotPending);
+
+        if (Status is not EventStatus.Active)
+            errors.Add(Error.EventStatusIsNotActive);
+
+        if (DateTimeRange.isPast(TimeSpan))
+            errors.Add(Error.EventTimeSpanIsInPast);
+
+        if (ConfirmedParticipations >= MaxNumberOfGuests.Value)
+            errors.Add(Error.EventIsFull);
+
+        if (errors.Any())
+            return Error.Add(errors);
+
+        return participation!.DeclineJoinRequest();
+    }
 
     public bool IsParticipating(Guest guest) {
         return Participations.Any(p => p.Guest == guest);

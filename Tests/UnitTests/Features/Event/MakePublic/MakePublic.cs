@@ -29,7 +29,7 @@ public class MakePublic {
     public void MakePublic_EventInCancelledStatus_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init()
-            .WithStatus(EventStatus.Canceled)
+            .WithStatus(EventStatus.Cancelled)
             .Build();
 
         // Act

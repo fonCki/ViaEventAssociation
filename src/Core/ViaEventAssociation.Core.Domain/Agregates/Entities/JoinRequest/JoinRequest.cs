@@ -24,6 +24,18 @@ public class JoinRequest : Participation {
         if (errors.Any())
             return Error.Add(errors);
 
-        return participation;
+        return participation.ParticipationStatus == ParticipationStatus.Declined
+            ? Error.EventIsPrivate
+            : participation;
+    }
+
+    public Result AcceptJoinRequest() {
+        ParticipationStatus = ParticipationStatus.Accepted;
+        return Result.Ok;
+    }
+
+    public Result DeclineJoinRequest() {
+        ParticipationStatus = ParticipationStatus.Declined;
+        return Result.Ok;
     }
 }

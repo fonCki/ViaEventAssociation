@@ -264,7 +264,7 @@ public class UpdateTimeInterval {
     public void UpdateTimeInterval_EventInCancelledStatus_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init()
-            .WithStatus(EventStatus.Canceled)
+            .WithStatus(EventStatus.Cancelled)
             .Build();
 
         var validStartTime = DateTime.Parse("2023/08/25 19:00");

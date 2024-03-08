@@ -66,7 +66,7 @@ public class MakePrivate {
     public void MakePrivate_EventInCancelledStatus_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init()
-            .WithStatus(EventStatus.Canceled)
+            .WithStatus(EventStatus.Cancelled)
             .Build();
 
         // Act

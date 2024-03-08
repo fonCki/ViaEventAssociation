@@ -121,7 +121,7 @@ public class UpdateTitle {
     [Fact]
     public void UpdateTitle_EventInCancelledStatus_FailureMessageReturned() {
         // Arrange
-        var @event = EventFactory.Init().WithStatus(EventStatus.Canceled).Build();
+        var @event = EventFactory.Init().WithStatus(EventStatus.Cancelled).Build();
 
         // Act
         var result = @event.UpdateTitle("Scary Movie Night!");

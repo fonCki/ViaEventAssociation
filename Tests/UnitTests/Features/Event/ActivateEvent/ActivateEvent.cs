@@ -102,7 +102,7 @@ public class ActivateEvent {
     public void ActivateEvent_EventInCancelledStatus_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init()
-            .WithStatus(EventStatus.Canceled)
+            .WithStatus(EventStatus.Cancelled)
             .Build();
 
         // Act

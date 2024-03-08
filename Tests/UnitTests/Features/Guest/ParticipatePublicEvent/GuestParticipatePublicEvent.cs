@@ -32,7 +32,7 @@ public class GuestParticipatePublicEvent {
     [Theory]
     [InlineData(EventStatus.Draft)]
     [InlineData(EventStatus.Ready)]
-    [InlineData(EventStatus.Canceled)]
+    [InlineData(EventStatus.Cancelled)]
     public void GuestParticipatePublicEvent_WithInvalidEventStatus_ShouldReturnFailure(EventStatus eventStatus) {
         //Arrange
         var guest = GuestFactory
