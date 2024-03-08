@@ -5,7 +5,7 @@ namespace UnitTests.Features.Location.UpdatesName;
 public class UpdateNameTests {
     // Update name of an existing location with a name length between minimum and maximum characters
     // Assuming similar constraints to the event title for demonstration
-    //ID:UC16.S1
+    //ID:UC17.S1
     [Theory]
     [InlineData("Beautiful Venue")] // Middle limit of the name length
     [InlineData("Loc")] // Minimum limit of the name length
@@ -24,7 +24,7 @@ public class UpdateNameTests {
     }
 
     // Update name of an existing location with a name length of 0 characters
-    //ID:UC16.F1
+    //ID:UC17.F1
     [Fact]
     public void UpdateName_NameLength0Characters_FailureMessageReturned() {
         // Arrange
@@ -39,7 +39,7 @@ public class UpdateNameTests {
     }
 
     // Update name of an existing location with a name length less than minimum required characters
-    // ID:UC16.F2
+    // ID:UC17.F2
     [Theory]
     [InlineData("No")]
     [InlineData("A")]
@@ -57,7 +57,7 @@ public class UpdateNameTests {
 
     // Update name of an existing location with a name length more than maximum allowed characters
     // Assuming max length for location name is similar to the event title length
-    // ID:UC16.F3
+    // ID:UC17.F3
     [Theory]
     [InlineData("This location name is definitely way too long for any practical use, and should not be accepted by the system for any reason at all, ever, period. It's just too long.")]
     [InlineData("This name is beyond the set limit and should not be accepted by the system for any reason at all, ever, period. It's just too long.")]
@@ -74,7 +74,7 @@ public class UpdateNameTests {
     }
 
     // Update name of an existing location with a null name
-    // ID:UC16.F4
+    // ID:UC17.F4
     [Fact]
     public void UpdateName_NameNull_FailureMessageReturned() {
         // Arrange

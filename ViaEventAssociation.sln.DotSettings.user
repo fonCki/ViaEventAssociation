@@ -35,7 +35,7 @@
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3e48fad3_002D3148_002D4680_002Da32e_002Ddca49053c54c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="EventCreatorDeclinesJoinRequest_ValidEvent_ValidUser_EventTimeSpanIsInPast" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;net8.0::xUnit::D46F2919-98BE-4980-8BF1-2298F4854CC1::UnitTests.Features.Event.DeclinesJoinRequest.DeclinesJoinRequest&lt;/TestId&gt;
+    &lt;TestId&gt;D46F2919-98BE-4980-8BF1-2298F4854CC1::net8.0::xUnit::UnitTests.Features.Guest.GuestRequestToJoin.GuestRequestToJoinPrivate.GuestRequestToJoinPrivate_WithMaxNumberOfGuests_WithAValidReadon_ShouldReturnFailure&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5797a62c_002D41fa_002D4c39_002Dbc53_002D08ff6aef7b56/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GuestRequestToJoinPrivate_WithMaxNumberOfGuests_WithAValidReadon_ShouldReturnFailure #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
