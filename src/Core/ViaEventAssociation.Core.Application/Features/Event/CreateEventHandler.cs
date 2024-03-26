@@ -14,14 +14,14 @@ internal class CreateEventHandler(IEventRepository eventRepository, IUnitOfWork 
     //     _unitOfWork = unitOfWork;
     // }
 
-    public override async Task<Result> HandleAsync(CreateEventCommand command) {
-        global::Event.Create(Organizer.Create("test", "test@test.com:").Payload);
-        // var result = await _eventRepository.AddAsync(@event);
-        // if (result.IsFailure) {
-        // return Result.Failure(result.Error);
-        // }
-
-        // await _unitOfWork.SaveChangesAsync();
-        return Result.Success();
-    }
+    // public override async Task<Result> HandleAsync(CreateEventCommand command) {
+    //     global::Event.Create(Organizer.Create("test", "test@test.com:").Payload);
+    //     // var result = await _eventRepository.AddAsync(@event);
+    //     // if (result.IsFailure) {
+    //     // return Result.Failure(result.Error);
+    //     // }
+    //
+    //     // await _unitOfWork.SaveChangesAsync();
+    //     return Result.Success();
+    // }
 }

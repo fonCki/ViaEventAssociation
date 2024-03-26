@@ -44,6 +44,7 @@ public class Error {
     public static Error InvalidLength => new("The UID has an invalid length.");
     public static Error InvalidPrefix => new("The UID has an invalid prefix, this probably is an ID from another entity.");
     public static Error EventIsNotFound => new("The event was not found.");
+    public static Error InvalidCommand => new("The command is invalid.");
 
     public static Error TooShortName(int minLength) {
         return new Error($"The provided name is too short, minimum length is {minLength} characters.");

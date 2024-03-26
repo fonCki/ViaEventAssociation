@@ -3,12 +3,11 @@ using ViaEventAssociation.Core.Domain.Agregates.Events;
 
 namespace ViaEventAssociation.Core.Application.Features.Commands.Event;
 
-public class UpdateTimeIntervalCommand {
-    private UpdateTimeIntervalCommand(EventId id, EventDateTime timeInterval) {
-        (Id, TimeInterval) = (id, timeInterval);
+public class UpdateTimeIntervalCommand : Command<EventId> {
+    private UpdateTimeIntervalCommand(EventId id, EventDateTime timeInterval) : base(id) {
+        TimeInterval = timeInterval;
     }
 
-    public EventId Id { get; }
     public EventDateTime TimeInterval { get; }
 
     public static Result<UpdateTimeIntervalCommand> Create(string id, string start, string end) {

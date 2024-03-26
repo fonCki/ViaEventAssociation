@@ -36,8 +36,7 @@ public class InMemEventRepoStub : IEventRepository {
         // find the event in the list
         var existingEvent = _events.FirstOrDefault(e => e.Id == id);
         if (existingEvent == null) {
-            var failureResult = Result.Fail(Error.EventIsNotFound) as Result<Event>;
-            return Task.FromResult(failureResult);
+            return Task.FromResult(Result<Event>.Fail(Error.EventIsNotFound));
         }
 
         return Task.FromResult(Result<Event>.Success(existingEvent));

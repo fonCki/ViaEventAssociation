@@ -1,3 +1,4 @@
+using ViaEventAssociation.Core.Application.Features.Commands;
 using ViaEventAssociation.Core.Application.Features.Commands.Event;
 using ViaEventAssociation.Core.Domain;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
@@ -5,20 +6,10 @@ using ViaEventAssociation.Core.Domain.Agregates.Events;
 
 namespace ViaEventAssociation.Core.Application.Features.Event;
 
-public class UpdateDescriptionHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : CommandHandler<UpdateDescriptionCommand, global::Event, EventId>(eventRepository, unitOfWork) {
-    public override async Task<Result> HandleAsync(UpdateDescriptionCommand command) {
-        var @event = await Repository.GetByIdAsync(command.Id);
+public class UpdateDescriptionHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : EventHandler(eventRepository, unitOfWork) {
+    protected override Task<Result> PerformAction(global::Event @event, Command<EventId> command) {
+        if (command is UpdateDescriptionCommand updateDescriptionCommand) return Task.FromResult(@event.UpdateDescription(updateDescriptionCommand.Description));
 
-        if (@event is null)
-            return Error.EventIsNotFound;
-
-        var action = @event.Payload.UpdateDescription(command.Description);
-
-        if (action.IsFailure)
-            return action.Error;
-
-        await UnitOfWork.SaveChangesAsync();
-
-        return Result.Success();
+        return Task.FromResult(Result.Fail(Error.InvalidCommand));
     }
 }

@@ -15,6 +15,4 @@ public abstract class CommandHandler<TCommand, TAgg, TId>
         Repository = repository;
         UnitOfWork = unitOfWork;
     }
-
-    public abstract Task<Result> HandleAsync(TCommand command);
 }

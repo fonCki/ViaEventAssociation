@@ -3,12 +3,11 @@ using ViaEventAssociation.Core.Domain.Agregates.Events;
 
 namespace ViaEventAssociation.Core.Application.Features.Commands.Event;
 
-public class UpdateTitleCommand {
-    private UpdateTitleCommand(EventId id, EventTitle title) {
-        (Id, Title) = (id, title);
+public class UpdateTitleCommand : Command<EventId> {
+    private UpdateTitleCommand(EventId id, EventTitle title) : base(id) {
+        Title = title;
     }
 
-    public EventId Id { get; }
     public EventTitle Title { get; }
 
     public static Result<UpdateTitleCommand> Create(string id, string title) {
