@@ -6,10 +6,10 @@ using ViaEventAssociation.Core.Domain.Agregates.Events;
 
 namespace ViaEventAssociation.Core.Application.Features.Event;
 
-public class UpdateDescriptionHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : EventHandler(eventRepository, unitOfWork) {
-    protected override Task<Result> PerformAction(global::Event @event, Command<EventId> command) {
-        if (command is UpdateDescriptionCommand updateDescriptionCommand)
-            return Task.FromResult(@event.UpdateDescription(updateDescriptionCommand.Description));
+public class ActivateEventHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : EventHandler(eventRepository, unitOfWork) {
+    protected override Task<Result> PerformAction(global::Event eve, Command<EventId> command) {
+        if (command is ActivateEventCommand activateEventCommand)
+            return Task.FromResult(eve.Activate());
         return Task.FromResult(Result.Fail(Error.InvalidCommand));
     }
 }

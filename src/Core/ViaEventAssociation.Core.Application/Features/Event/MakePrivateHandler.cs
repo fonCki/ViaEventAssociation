@@ -6,10 +6,10 @@ using ViaEventAssociation.Core.Domain.Agregates.Events;
 
 namespace ViaEventAssociation.Core.Application.Features.Event;
 
-public class UpdateDescriptionHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : EventHandler(eventRepository, unitOfWork) {
+public class MakePrivateHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : EventHandler(eventRepository, unitOfWork) {
     protected override Task<Result> PerformAction(global::Event @event, Command<EventId> command) {
-        if (command is UpdateDescriptionCommand updateDescriptionCommand)
-            return Task.FromResult(@event.UpdateDescription(updateDescriptionCommand.Description));
+        if (command is MakePrivateCommand makePrivateCommand)
+            return Task.FromResult(@event.MakePrivate());
         return Task.FromResult(Result.Fail(Error.InvalidCommand));
     }
 }

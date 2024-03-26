@@ -1,6 +1,6 @@
 namespace ViaEventAssociation.Core.Application.Features.Commands;
 
-public class Command<Tid> {
+public abstract class Command<Tid> {
     public Command(Tid id) {
         Id = id;
     }
