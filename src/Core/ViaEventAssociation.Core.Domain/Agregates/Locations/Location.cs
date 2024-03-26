@@ -2,7 +2,7 @@ using ViaEventAssociation.Core.Domain.Common.Values;
 
 namespace ViaEventAssociation.Core.Domain.Agregates.Locations;
 
-public class Location {
+public class Location { //TODO ADD AGREGATE
     private Location(LocationName name, NumberOfGuests maxNumberOfGuests) {
         Name = name;
         MaxNumberOfGuests = maxNumberOfGuests;

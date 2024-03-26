@@ -1,3 +1,4 @@
+using System.Globalization;
 using ViaEventAssociation.Core.Domain.Common.Values;
 
 namespace ViaEventAssociation.Core.Domain.Agregates.Events;
@@ -10,10 +11,22 @@ public class EventDateTime : DateTimeRange {
     private static readonly TimeSpan MIN_EVENT_DURATION = new(1, 0, 0); // 30 minutes
     private EventDateTime(DateTime start, DateTime end) : base(start, end) { }
 
+
     public static Result<EventDateTime> Create(DateTime start, DateTime end) {
         try {
             var validation = Validate(start, end);
             return validation.IsSuccess ? new EventDateTime(start, end) : validation.Error;
+        }
+        catch (Exception exception) {
+            return Error.FromException(exception);
+        }
+    }
+
+    public static Result<EventDateTime> CreateFromStrings(string start, string end) {
+        try {
+            var startDateTime = DateTime.ParseExact(start, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+            var endDateTime = DateTime.ParseExact(end, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+            return Create(startDateTime, endDateTime);
         }
         catch (Exception exception) {
             return Error.FromException(exception);

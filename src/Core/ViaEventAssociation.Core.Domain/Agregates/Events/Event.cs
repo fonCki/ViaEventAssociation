@@ -33,12 +33,9 @@ public class Event : AggregateRoot<EventId> {
         return newEvent;
     }
 
-    public Result UpdateTitle(string title) {
+    public Result UpdateTitle(EventTitle title) {
         // Use a list or hashset to collect errors since there can be multiple issues with the title.
         HashSet<Error> errors = new HashSet<Error>();
-
-        var newTitle = EventTitle.Create(title)
-            .OnFailure(error => errors.Add(error));
 
         if (Status is EventStatus.Active)
             errors.Add(Error.EventStatusIsActive);
@@ -48,20 +45,18 @@ public class Event : AggregateRoot<EventId> {
 
         // If there are any errors, return them
         if (errors.Any())
-            return Result.Fail(Error.Add(errors)); // This assumes Error.Add can handle a HashSet<Error>
+            return Result.Fail(Error.Add(errors));
 
         // If there are no errors, update the title and return success
-        Title = newTitle.Payload;
+        Title = title;
         Status = EventStatus.Draft;
         return Result.Ok;
     }
 
-    public Result UpdateDescription(string description) {
+
+    public Result UpdateDescription(EventDescription description) {
         // Use a list or hashset to collect errors since there can be multiple issues with the description.
         var errors = new HashSet<Error>();
-
-        var newDescription = EventDescription.Create(description)
-            .OnFailure(error => errors.Add(error));
 
         if (Status is EventStatus.Active)
             errors.Add(Error.EventStatusIsActive);
@@ -74,17 +69,14 @@ public class Event : AggregateRoot<EventId> {
             return Result.Fail(Error.Add(errors)); // This assumes Error.Add can handle a HashSet<Error>
 
         // If there are no errors, update the description and return success
-        Description = newDescription.Payload;
+        Description = description;
         Status = EventStatus.Draft;
         return Result.Ok;
     }
 
-    public Result UpdateTimeSpan(DateTime start, DateTime end) {
+    public Result UpdateTimeSpan(EventDateTime newTimeSpan) {
         // Use a list or hashset to collect errors since there can be multiple issues with the time span.
         var errors = new HashSet<Error>();
-
-        var newTimeSpan = EventDateTime.Create(start, end)
-            .OnFailure(error => errors.Add(error));
 
         if (Status is EventStatus.Active)
             errors.Add(Error.EventStatusIsActive);
@@ -97,7 +89,7 @@ public class Event : AggregateRoot<EventId> {
             return Result.Fail(Error.Add(errors)); // This assumes Error.Add can handle a HashSet<Error>
 
         // If there are no errors, update the time span and return success
-        TimeSpan = newTimeSpan.Payload;
+        TimeSpan = newTimeSpan;
         Status = EventStatus.Draft;
         return Result.Ok;
     }

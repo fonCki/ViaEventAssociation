@@ -41,6 +41,9 @@ public class Error {
     public static Error GuestAlreadyInvited => new("The guest is already invited to the event.");
     public static Error JoinRequestNotFound => new("The join request was not found.");
     public static Error JoinRequestIsNotPending => new("The join request is not pending, only pending join requests can be accepted or rejected.");
+    public static Error InvalidLength => new("The UID has an invalid length.");
+    public static Error InvalidPrefix => new("The UID has an invalid prefix, this probably is an ID from another entity.");
+    public static Error EventIsNotFound => new("The event was not found.");
 
     public static Error TooShortName(int minLength) {
         return new Error($"The provided name is too short, minimum length is {minLength} characters.");

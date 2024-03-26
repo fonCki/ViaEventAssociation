@@ -1,7 +1,7 @@
 using ViaEventAssociation.Core.Domain.Agregates.Organizer;
 using ViaEventAssociation.Core.Domain.Common.Values;
 
-public class Organizer {
+public class Organizer { //TODO ADD AGREGATE
     private Organizer(OrganizerId id, OrganizerName name, Email email) {
         OrganizerId = id;
         OrganizerName = name;

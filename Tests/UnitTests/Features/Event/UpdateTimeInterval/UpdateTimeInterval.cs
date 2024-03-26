@@ -14,9 +14,10 @@ public class UpdateTimeInterval {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Draft)
             .Build();
+        var timeSpan = EventDateTime.Create(startTime, endTime).Payload;
 
         // Act
-        @event.UpdateTimeSpan(startTime, endTime);
+        @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.Equal(startTime, @event.TimeSpan.Start);
@@ -34,9 +35,10 @@ public class UpdateTimeInterval {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Draft)
             .Build();
+        var timeSpan = EventDateTime.Create(startTime, endTime).Payload;
 
         // Act
-        @event.UpdateTimeSpan(startTime, endTime);
+        @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.Equal(startTime, @event.TimeSpan.Start);
@@ -56,9 +58,10 @@ public class UpdateTimeInterval {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Ready)
             .Build();
+        var timeSpan = EventDateTime.Create(startTime, endTime).Payload;
 
         // Act
-        @event.UpdateTimeSpan(startTime, endTime);
+        @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.Equal(startTime, @event.TimeSpan.Start);
@@ -78,9 +81,10 @@ public class UpdateTimeInterval {
         // Arrange
         var @event = EventFactory.Init()
             .Build();
+        var timeSpan = EventDateTime.Create(startTime, endTime).Payload;
 
         // Act
-        @event.UpdateTimeSpan(startTime, endTime);
+        @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.Equal(startTime, @event.TimeSpan.Start);
@@ -99,9 +103,10 @@ public class UpdateTimeInterval {
         // Arrange
         var @event = EventFactory.Init()
             .Build();
+        var timeSpan = EventDateTime.Create(startTime, endTime).Payload;
 
         // Act
-        @event.UpdateTimeSpan(startTime, endTime);
+        @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.Equal(startTime, @event.TimeSpan.Start);
@@ -121,7 +126,7 @@ public class UpdateTimeInterval {
             .Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -142,7 +147,7 @@ public class UpdateTimeInterval {
             .Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -161,7 +166,7 @@ public class UpdateTimeInterval {
         var @event = EventFactory.Init()
             .Build();
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -185,7 +190,7 @@ public class UpdateTimeInterval {
             .Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -211,7 +216,7 @@ public class UpdateTimeInterval {
             .Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -231,7 +236,7 @@ public class UpdateTimeInterval {
             .Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -250,8 +255,10 @@ public class UpdateTimeInterval {
         var validStartTime = DateTime.Parse("2023/08/25 19:00");
         var validEndTime = DateTime.Parse("2023/08/25 23:59");
 
+        var timeSpan = EventDateTime.Create(validStartTime, validEndTime).Payload;
+
         // Act
-        var result = @event.UpdateTimeSpan(validStartTime, validEndTime);
+        var result = @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -270,8 +277,10 @@ public class UpdateTimeInterval {
         var validStartTime = DateTime.Parse("2023/08/25 19:00");
         var validEndTime = DateTime.Parse("2023/08/25 23:59");
 
+        var timeSpan = EventDateTime.Create(validStartTime, validEndTime).Payload;
+
         // Act
-        var result = @event.UpdateTimeSpan(validStartTime, validEndTime);
+        var result = @event.UpdateTimeSpan(timeSpan);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -291,7 +300,7 @@ public class UpdateTimeInterval {
             .Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -313,7 +322,7 @@ public class UpdateTimeInterval {
         var validEndTime = DateTime.Parse("2023/08/25 23:59");
 
         // Act
-        var result = @event.UpdateTimeSpan(validStartTime, validEndTime);
+        var result = EventDateTime.Create(validStartTime, validEndTime);
 
         // Assert
         // Assert.True(result.IsFailure);
@@ -331,7 +340,7 @@ public class UpdateTimeInterval {
         var @event = EventFactory.Init().Build();
 
         // Act
-        var result = @event.UpdateTimeSpan(startTime, endTime);
+        var result = EventDateTime.Create(startTime, endTime);
 
         // Assert
         Assert.True(result.IsFailure, "Expected failure when updating time interval");

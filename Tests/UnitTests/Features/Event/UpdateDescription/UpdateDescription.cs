@@ -17,9 +17,10 @@ public class UpdateDescription {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Draft)
             .Build();
+        var convertedDescription = EventDescription.Create(description).Payload;
 
         // Act
-        @event.UpdateDescription(description);
+        @event.UpdateDescription(convertedDescription);
 
         // Assert
         Assert.Equal(description, @event.Description.Value);
@@ -33,9 +34,10 @@ public class UpdateDescription {
     public void UpdateDescription_DescriptionSetToNothing_DescriptionSetToEmpty(string description) {
         // Arrange
         var @event = EventFactory.Init().Build();
+        var convertedDescription = EventDescription.Create(description).Payload;
 
         // Act
-        @event.UpdateDescription(description);
+        @event.UpdateDescription(convertedDescription);
 
         // Assert
         Assert.Equal("", @event.Description.Value);
@@ -57,9 +59,10 @@ public class UpdateDescription {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Ready)
             .Build();
+        var convertedDescription = EventDescription.Create(description).Payload;
 
         // Act
-        @event.UpdateDescription(description);
+        @event.UpdateDescription(convertedDescription);
 
         // Assert
         Assert.Equal(description, @event.Description.Value);
@@ -75,7 +78,7 @@ public class UpdateDescription {
         var description = "Nam quis nulla. Integer malesuada. In in enim a arcu imperdiet malesuada. Sed vel lectus. Donec odio urna, tempus molestie, porttitor ut, iaculis quis, sem. Phasellus rhoncus. Aenean id metus id velit ullamcorper pulvinar. Vestibulum fermentum tortor ";
 
         // Act
-        var result = @event.UpdateDescription(description);
+        var result = EventDescription.Create(description);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -90,9 +93,10 @@ public class UpdateDescription {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Cancelled)
             .Build();
+        var updatedDescription = EventDescription.Create("New description").Payload;
 
         // Act
-        var result = @event.UpdateDescription("New description");
+        var result = @event.UpdateDescription(updatedDescription);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -107,9 +111,10 @@ public class UpdateDescription {
         var @event = EventFactory.Init()
             .WithStatus(EventStatus.Active)
             .Build();
+        var updatedDescription = EventDescription.Create("New description").Payload;
 
         // Act
-        var result = @event.UpdateDescription("New description");
+        var result = @event.UpdateDescription(updatedDescription);
 
         // Assert
         Assert.True(result.IsFailure);

@@ -13,8 +13,10 @@ public class UpdateTitle {
             .WithStatus(EventStatus.Draft)
             .Build();
 
+        var convertedTitle = EventTitle.Create(title).Payload;
+
         // Act
-        @event.UpdateTitle(title);
+        @event.UpdateTitle(convertedTitle);
 
         // Assert
         Assert.Equal(title, @event.Title.Value);
@@ -29,8 +31,10 @@ public class UpdateTitle {
             .WithStatus(EventStatus.Ready)
             .Build();
 
+        var convertedTitle = EventTitle.Create("Graduation Gala").Payload;
+
         // Act
-        @event.UpdateTitle("Graduation Gala");
+        @event.UpdateTitle(convertedTitle);
 
         // Assert
         Assert.Equal("Graduation Gala", @event.Title.Value);
@@ -45,7 +49,7 @@ public class UpdateTitle {
         var @event = EventFactory.Init().Build();
 
         // Act
-        var result = @event.UpdateTitle("");
+        var result = EventTitle.Create("");
 
         // Assert
         Assert.True(result.IsFailure);
@@ -62,7 +66,7 @@ public class UpdateTitle {
         var @event = EventFactory.Init().Build();
 
         // Act
-        var result = @event.UpdateTitle(title);
+        var result = EventTitle.Create(title);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -79,7 +83,7 @@ public class UpdateTitle {
         var @event = EventFactory.Init().Build();
 
         // Act
-        var result = @event.UpdateTitle(title);
+        var result = EventTitle.Create(title);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -92,9 +96,10 @@ public class UpdateTitle {
     public void UpdateTitle_TitleNull_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init().Build();
+        string title = null;
 
         // Act
-        var result = @event.UpdateTitle(null);
+        var result = EventTitle.Create(title);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -107,9 +112,10 @@ public class UpdateTitle {
     public void UpdateTitle_EventInActiveStatus_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init().WithStatus(EventStatus.Active).Build();
+        var convertedTitle = EventTitle.Create("Scary Movie Night!").Payload;
 
         // Act
-        var result = @event.UpdateTitle("Scary Movie Night!");
+        var result = @event.UpdateTitle(convertedTitle);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -122,9 +128,10 @@ public class UpdateTitle {
     public void UpdateTitle_EventInCancelledStatus_FailureMessageReturned() {
         // Arrange
         var @event = EventFactory.Init().WithStatus(EventStatus.Cancelled).Build();
+        var convertedTitle = EventTitle.Create("Scary Movie Night!").Payload;
 
         // Act
-        var result = @event.UpdateTitle("Scary Movie Night!");
+        var result = @event.UpdateTitle(convertedTitle);
 
         // Assert
         Assert.True(result.IsFailure);
