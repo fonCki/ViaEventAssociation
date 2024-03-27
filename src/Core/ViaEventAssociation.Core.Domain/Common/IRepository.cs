@@ -6,6 +6,6 @@ public interface IRepository<TAgg, in TId> where TAgg : AggregateRoot<TId> where
     Task<Result> AddAsync(TAgg aggregate);
     Task<Result> UpdateAsync(TAgg aggregate);
     Task<Result> DeleteAsync(TId id);
-    Task<Result<Event>> GetByIdAsync(TId id);
+    Task<Result<TAgg>> GetByIdAsync(TId id);
     Task<Result<List<TAgg>>> GetAllAsync();
 }

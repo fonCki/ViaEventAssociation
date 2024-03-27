@@ -52,7 +52,7 @@ public class CancelEventParticipation {
 
     //Given an existing event with ID, and a registered guest with ID, and the guest is marked as participating in the event, and the event start time is in the past, when the guest chooses to cancel their participation, then the request is rejected, and a message explains you cannot cancel your participation of past or ongoing events
     //ID:UC12.F1
-    //TODO Troels: this fucked up my setters
+    //TODO Troels: this messed up my setters
     [Fact]
     public void GuestCancelsParticipation_WithValidEventAndGuestParticipatingAndEventInPast_ShouldNotChangeParticipation() {
         //Arrange

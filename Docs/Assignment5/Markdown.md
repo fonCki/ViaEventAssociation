@@ -16,8 +16,7 @@ implementation progress.
 
 #### UC1 - Event Creator Creates New Event
 
-- [✅] **User Story**: In order to host eve
-- nts, as a creator, I want to create a new event.
+- [✅] **User Story**: In order to host events, as a creator, I want to create a new event.
     - **Success Scenarios**:
         - [✅] S1: Given an ID, when creator selects to create an event, then an empty event is created with an ID, the
           status is set to "draft", and the maximum number of guests is 5.
@@ -29,6 +28,8 @@ implementation progress.
           the event is private.
     - **Failure Scenarios**:
         - [✅] (No failure scenarios specified for this use case.)
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC2 - Event Creator Updates Title of Event
 
@@ -42,6 +43,8 @@ implementation progress.
           message is returned explaining the rules if the title is not between 3 and 75 characters.
         - [✅] F2: Given an existing event with ID, when creator selects to set the title of the event and the event is
           in active or cancelled status, then a failure message is returned explaining that modification is not allowed.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC3 - Event Creator Updates Description of Event
 
@@ -63,6 +66,8 @@ implementation progress.
           event is in cancelled status, then a failure message is returned.
         - [✅] F3: Given an existing event with ID, when creator selects to set the description of the event and the
           event is in active status, then a failure message is returned.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC4 - Event Creator Updates Start and End Time of the Event
 
@@ -102,6 +107,8 @@ implementation progress.
           the past, then a failure message is returned.
         - [✅] F11: Given an existing event with ID, when creator selects to set the times of the event and the time
           spans the restricted hours, then a failure message is returned.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC5 - Event Creator Makes the Event Public
 
@@ -112,6 +119,8 @@ implementation progress.
     - **Failure Scenarios**:
         - [✅] F1: Given an existing event with ID and the event is in cancelled status, when creator chooses to make the
           event public, then a failure message is provided.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC6 - Event Creator Makes the Event Private
 
@@ -126,6 +135,8 @@ implementation progress.
           event private, then a failure message is provided.
         - [✅] F2: Given an existing event with ID and the event is in cancelled status, when creator chooses to make the
           event private, then a failure message is provided.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC7 - Event Creator Sets Maximum Number of Guests
 
@@ -151,6 +162,8 @@ implementation progress.
           5, then a failure message is provided.
         - [✅] F5: Given an existing event with ID, when creator sets the number of maximum guests to a number greater
           than 50, then a failure message is provided.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC8 - Event Creator Readies an Event
 
@@ -167,6 +180,8 @@ implementation progress.
           readies the event, then a failure message is provided.
         - [✅] F4: Given an existing event with ID and the title of the event is the default, when creator readies the
           event, then a failure message is provided.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC9 - Event Creator Activates an Event
 
@@ -183,6 +198,8 @@ implementation progress.
           valid values, when creator activates the event, then a failure message is provided.
         - [✅] F2: Given an existing event with ID and the event is in cancelled status, when creator activates the
           event, then a failure message is provided.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC10 - Anonymous Registers a New Account
 
@@ -205,6 +222,8 @@ implementation progress.
           request is rejected.
         - [✅] F7: Given first name or last name, when Anon chooses to register and the name contains symbols, then the
           request is rejected.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC11 - Guest Participates in Public Event
 
@@ -227,6 +246,8 @@ implementation progress.
           the event, then the request is rejected.
         - [✅] F5: Given an existing valid event with ID and the guest is already a participant, when guest chooses to
           participate in the event, then the request is rejected.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC12 - Guest Cancels Event Participation
 
@@ -255,6 +276,8 @@ implementation progress.
           ID, when the creator invites a guest, then the request is rejected.
         - [✅] F2: Given an existing event with ID, the event status is active, a registered guest with ID, and the
           maximum number of guests is already attending, when the creator invites a guest, then the request is rejected.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC14 - Guest Accepts Invitation
 
@@ -273,6 +296,8 @@ implementation progress.
           when the guest accepts the invitation, then the request is rejected.
         - [✅] F4: Given a ready event and a registered guest and the event has a pending invitation for the guest, when
           the guest accepts the invitation, then the request is rejected.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC15 - Guest Declines Invitation
 
@@ -292,6 +317,8 @@ implementation progress.
         - [✅] F3: Given a ready event and a registered guest, and the event has a pending invitation for the guest, when
           the guest accepts the invitation, then the request is rejected with a message explaining the event cannot yet
           be declined.
+    - [✅] **Test Handler**
+    - [✅] **Test Command**
 
 #### UC16 - Event Creator Adds New Location
 
@@ -304,6 +331,8 @@ implementation progress.
         - [✅] S3: When a creator adds a new location, then the location should initially have an empty list of events.
     - **Failure Scenarios**:
         - [ ] 
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC16 - Event Creator Updates Location Name
 
@@ -324,6 +353,8 @@ implementation progress.
           system should return a failure message indicating that the name is too long.
         - [✅] F4: Update name of an existing location with a null name. The system should return a failure message
           indicating that the name cannot be null.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC18 - Event Creator Sets Maximum Number of Guests for a Location
 
@@ -341,6 +372,8 @@ implementation progress.
         - [✅] F2: Given an existing location, when the owner sets the number of maximum guests to a number greater than
           the maximum allowed, then a failure message is provided explaining the maximum number of guests. This ensures
           compliance with safety or regulatory maximums.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC19 - Event Creator Sets Availability Time Span for a Location
 
@@ -359,6 +392,8 @@ implementation progress.
         - [✅] F2: Given an existing location with scheduled events, when the owner tries to set an availability time
           span that overlaps with an existing event, then the action should fail. A failure message should be returned,
           indicating that the new availability time span overlaps with a scheduled event.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC20 - Event Creator Sets Location of Event
 
@@ -376,6 +411,8 @@ implementation progress.
         - [✅] F2: Event creator sets the location of an event to a location that is not available during the event's
           scheduled time. The system should return a failure message indicating that the location is unavailable during
           the requested time.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC21 - Guest Requests to Join Private Event
 
@@ -406,6 +443,8 @@ implementation progress.
         - [✅] F5: Given an existing valid event with ID, and a registered guest with ID, and the guest is already a
           participant at the event, when the guest chooses to participate in the event again, then the request is
           rejected, and a failure message is provided explaining that a guest cannot occupy two slots at an event.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC22 - Event Creator Approves Join Request for Private Event
 
@@ -436,6 +475,8 @@ implementation progress.
         - [✅] F6: Given an event creator, a valid event, and a valid user, when the event creator attempts to approve a
           join request for an event that is already full, then the request is rejected, and a failure message is
           provided explaining that the event cannot accept more participants.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC23 - Event Creator Declines Join Request
 
@@ -457,6 +498,8 @@ implementation progress.
         - [✅] F4: Given an event creator, a valid event, and a valid user, when the event creator attempts to decline a
           join request that does not exist (either because it was never made or has already been resolved), then the
           action should fail. A failure message is provided indicating that the join request was not found.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC24 - Event Creator Cancels Event
 
@@ -471,6 +514,8 @@ implementation progress.
         - [❌] F1: Given an event creator, a valid event, and the event is already cancelled, when the event creator
           attempts to cancel the event, then the action should fail. A failure message is provided indicating that the
           event is already cancelled.
+    - [❌] **Test Handler**
+    - [❌] **Test Command**
 
 #### UC25 - Event Creator Deletes Event
 
@@ -485,4 +530,5 @@ implementation progress.
         - [❌] F1: Given an event creator, a valid event, and the event is already cancelled, when the event creator
           attempts to delete the event, then the action should fail. A failure message is provided indicating that the
           event is already cancelled.
-
+    - [❌] **Test Handler**
+    - [❌] **Test Command**

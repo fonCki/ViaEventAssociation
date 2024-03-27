@@ -1,5 +1,6 @@
 using ViaEventAssociation.Core.Domain.Common.Bases;
 using ViaEventAssociation.Core.Domain.Common.Values;
+using ViaEventAssociation.Core.Domain.Contracts;
 using ViaEventAssociation.Core.Domain.Entities;
 using ViaEventAssociation.Core.Domain.Entities.Invitation;
 
@@ -18,23 +19,11 @@ public class Guest : AggregateRoot<GuestId> {
     public Email Email { get; }
     public List<Participation> Participations { get; }
 
-    public static Result<Guest> Create(string firstName, string lastName, string email) {
-        var errors = new HashSet<Error>();
-
-        var FirstName = NameType.Create(firstName)
-            .OnFailure(error => errors.Add(error));
-
-        var LastName = NameType.Create(lastName)
-            .OnFailure(error => errors.Add(error));
-
-        var Mail = Email.Create(email)
-            .OnFailure(error => errors.Add(error));
-
-        if (errors.Any())
-            return Error.Add(errors);
-
+    public static Result<Guest> Create(GuestId guid, NameType firstName, NameType lastName, Email email) {
+        if (IEmailUnusedChecker.IsEmailUsed(email).Payload)
+            return Error.EmailAlreadyUsed;
         try {
-            var guest = new Guest(GuestId.GenerateId().Payload, FirstName.Payload, LastName.Payload, Mail.Payload);
+            var guest = new Guest(guid, firstName, lastName, email);
             return guest;
         }
         catch (Exception exception) {
@@ -58,6 +47,17 @@ public class Guest : AggregateRoot<GuestId> {
             return Error.Add(errors);
 
         return participationResult.Payload;
+    }
+
+    //TODO improve this method
+    public Result CancelParticipation(Event @event) {
+        var participation = Participations.FirstOrDefault(p => p.Event == @event && p.ParticipationStatus != ParticipationStatus.Canceled);
+        if (participation is null)
+            return Result.Ok; //I could return an error that the user is not found. is better than do not act TROELS
+        var result = participation.CancelParticipation();
+        if (result.IsFailure)
+            return result.Error;
+        return Result.Ok;
     }
 
     public Result Serve(Invitation invitation) {
@@ -99,17 +99,6 @@ public class Guest : AggregateRoot<GuestId> {
             return Error.InvitationPendingOrAcceptedNotFound;
 
         var result = invitation.DeclineInvitation();
-        if (result.IsFailure)
-            return result.Error;
-        return Result.Ok;
-    }
-
-    //TODO improve this method
-    public Result CancelParticipation(Event @event) {
-        var participation = Participations.FirstOrDefault(p => p.Event == @event && p.ParticipationStatus != ParticipationStatus.Canceled);
-        if (participation is null)
-            return Result.Ok; //I could return an error that the user is not found. is better than do not act TROELS
-        var result = participation.CancelParticipation();
         if (result.IsFailure)
             return result.Error;
         return Result.Ok;

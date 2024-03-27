@@ -1,6 +1,14 @@
 using ViaEventAssociation.Core.Domain.Agregates.Guests;
+using ViaEventAssociation.Core.Domain.Common.Values;
+using Xunit.Abstractions;
 
 public class RegisterGuest {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public RegisterGuest(ITestOutputHelper testOutputHelper) {
+        _testOutputHelper = testOutputHelper;
+    }
+
     // Given via-email, first name, and last name, and email ends with “@via.dk”, and email is in correct email format, and email.text1 is between 3 and 6 (inclusive) characters long, and email.text1 is either: 3 or 4 uppercase/lowercase English letters, or 6 digits from 0 to 9, and first name is between 2 and 25 characters, and last name is between 2 and 25 characters (i.e. letters, not numbers or symbols)
     //ID:UC10.S1
     [Theory]
@@ -9,9 +17,13 @@ public class RegisterGuest {
     [InlineData("thisisatwentyfivecharacte", "thisisatwentyfivecharacte", "313330@via.dk")]
     public void RegisterGuest_WithValidData_ShouldCreateNewAccount(string firstName, string lastName, string email) {
         //Arrange
+        var validId = GuestId.GenerateId().Payload;
+        var validName = NameType.Create(firstName).Payload;
+        var validLastName = NameType.Create(lastName).Payload;
+        var validEmail = Email.Create(email).Payload;
 
         //Act
-        var result = Guest.Create(firstName, lastName, email);
+        var result = Guest.Create(validId, validName, validLastName, validEmail);
 
         //Assert
         Assert.True(result.IsSuccess);
@@ -25,12 +37,10 @@ public class RegisterGuest {
     [Fact]
     public void RegisterGuest_WithInvalidEmailDomain_ShouldReturnError() {
         //Arrange
-        var validName = "John";
-        var validLastName = "Doe";
         var email = "john@gmail.com";
 
         //Act
-        var result = Guest.Create(validName, validLastName, email);
+        var result = Email.Create(email);
 
         //Assert
         Assert.True(result.IsFailure);
@@ -49,7 +59,7 @@ public class RegisterGuest {
         //Arrange
 
         //Act
-        var result = Guest.Create(firstName, lastName, email);
+        var result = Email.Create(email);
 
         //Assert
         Assert.True(result.IsFailure);
@@ -67,7 +77,7 @@ public class RegisterGuest {
 
 
         //Act
-        var result = Guest.Create(firstName, lastName, email);
+        var result = NameType.Create(firstName);
 
         //Assert
         Assert.True(result.IsFailure);
@@ -86,7 +96,7 @@ public class RegisterGuest {
         //Arrange
 
         //Act
-        var result = Guest.Create(firstName, lastName, email);
+        var result = NameType.Create(lastName);
 
         //Assert
         Assert.True(result.IsFailure);
@@ -96,6 +106,7 @@ public class RegisterGuest {
     }
 
     // Given email, and the email is already registered
+    //should not this be tested outside? in the handler TODO troels
     // ID:UC10.F5
     [Fact]
     public void RegisterGuest_WithAlreadyRegisteredEmail_ShouldReturnError() {
@@ -105,7 +116,7 @@ public class RegisterGuest {
         var email = "john@via.dk";
 
         //Act
-        var result = Guest.Create(validName, validLastName, email);
+        // var result = Guest.Create(validName, validLastName, email);
 
         //Assert
         //TODO NOT IMPLEMENTED
@@ -121,14 +132,19 @@ public class RegisterGuest {
     [InlineData("john", "234", "JD1@via.dk")]
     public void RegisterGuest_WithNumbersInName_ShouldReturnError(string firstName, string lastName, string email) {
         //Arrange
+        var errors = new HashSet<Error>();
 
         //Act
-        var result = Guest.Create(firstName, lastName, email);
+        var resultName = NameType.Create(firstName)
+            .OnFailure(error => errors.Add(error));
+        var resultLastName = NameType.Create(lastName)
+            .OnFailure(error => errors.Add(error));
+
+        var error = Error.Add(errors);
 
         //Assert
-        Assert.True(result.IsFailure);
-        var errors = result.Error.GetAllErrors();
-        Assert.Contains(Error.InvalidName, result.Error.GetAllErrors());
+        Assert.True(resultName.IsFailure || resultLastName.IsFailure);
+        Assert.Contains(Error.InvalidName, error.GetAllErrors());
     }
 
     // Given first name or last name, and the name contains symbols
@@ -140,13 +156,18 @@ public class RegisterGuest {
     [InlineData("john", "@", "JD1@via.dk")]
     public void RegisterGuest_WithSymbolsInName_ShouldReturnError(string firstName, string lastName, string email) {
         //Arrange
+        var errors = new HashSet<Error>();
 
         //Act
-        var result = Guest.Create(firstName, lastName, email);
+        var resultName = NameType.Create(firstName)
+            .OnFailure(error => errors.Add(error));
+        var resultLastName = NameType.Create(lastName)
+            .OnFailure(error => errors.Add(error));
+
+        var error = Error.Add(errors);
 
         //Assert
-        Assert.True(result.IsFailure);
-        var errors = result.Error.GetAllErrors();
-        Assert.Contains(Error.InvalidName, result.Error.GetAllErrors());
+        Assert.True(resultName.IsFailure || resultLastName.IsFailure);
+        Assert.Contains(Error.InvalidName, error.GetAllErrors());
     }
 }

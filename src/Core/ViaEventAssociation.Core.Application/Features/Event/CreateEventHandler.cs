@@ -1,11 +1,10 @@
-using ViaEventAssociation.Core.Application.Features.Commands.Event;
 using ViaEventAssociation.Core.Domain;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Agregates.Events;
 
 namespace ViaEventAssociation.Core.Application.Features.Event;
 
-internal class CreateEventHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : CommandHandler<CreateEventCommand, global::Event, EventId>(eventRepository, unitOfWork) {
+internal class CreateEventHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : CommandHandler<global::Event, EventId>(eventRepository, unitOfWork) {
     // private readonly IEventRepository _eventRepository;
     // private readonly IUnitOfWork _unitOfWork;
 
