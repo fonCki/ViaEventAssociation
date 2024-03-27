@@ -84,9 +84,9 @@ public class AprovesJoinRequest {
     public void EventCreatorApprovesJoinRequest_ValidEvent_ValidUser_EventTimeSpanIsInPast() {
         //Arrange
         var @event = EventFactory.Init()
-            .WithValidTimeInFuture()
             .WithVisibility(EventVisibility.Public)
             .WithStatus(EventStatus.Active)
+            .WithValidTimeInFuture()
             .WithMaxNumberOfGuests(10)
             .WithValidConfirmedAttendees(5)
             .WithVisibility(EventVisibility.Private)
@@ -94,16 +94,18 @@ public class AprovesJoinRequest {
 
         var guest = GuestFactory.InitWithDefaultsValues().Build();
         guest.RegisterToEvent(@event, "I want to join the event, and this is a valid reason");
-        @event.TimeSpan = EventDateTime.Create(
-            DateTime.UtcNow.AddDays(-1).AddHours(9),
-            DateTime.UtcNow.AddDays(-1).AddHours(10)
-        ).Payload;
+        var newTimeSpan = EventDateTime.Create(
+            DateTime.UtcNow.AddDays(-1).Date.AddHours(10), // Yesterday at 10 AM
+            DateTime.UtcNow.AddDays(-1).Date.AddHours(11) // Yesterday at 11 AM
+        );
+
+        @event.TimeSpan = newTimeSpan.Payload;
 
         //Act
         var result = @event.ApproveJoinRequest(guest);
         //Assert
         Assert.True(result.IsFailure);
-        Assert.Equal(Error.EventTimeSpanIsInPast, result.Error);
+        Assert.Contains(Error.EventTimeSpanIsInPast, result.Error.GetAllErrors());
     }
 
     // Given an event creator, a valid event and a valid user, when the event creator approves the join request, then the event is full

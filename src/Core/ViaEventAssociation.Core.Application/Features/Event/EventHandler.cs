@@ -1,11 +1,10 @@
 using ViaEventAssociation.Core.Application.Features;
 using ViaEventAssociation.Core.Application.Features.Commands;
-using ViaEventAssociation.Core.Application.Features.Commands.Event;
 using ViaEventAssociation.Core.Domain;
 using ViaEventAssociation.Core.Domain.Aggregates.Events;
 using ViaEventAssociation.Core.Domain.Agregates.Events;
 
-public abstract class EventHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : CommandHandler<UpdateDescriptionCommand, Event, EventId>(eventRepository, unitOfWork) {
+public abstract class EventHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork) : CommandHandler<Event, EventId>(eventRepository, unitOfWork) {
     private Result<Event> @event;
 
     public async Task<Result> HandleAsync(Command<EventId> command) {

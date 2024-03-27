@@ -1,9 +1,9 @@
 namespace ViaEventAssociation.Core.Application.Features.Commands;
 
-public abstract class Command<Tid> {
-    public Command(Tid id) {
+public abstract class Command<TId> {
+    public Command(TId id) {
         Id = id;
     }
 
-    public Tid Id { get; }
+    public TId Id { get; }
 }

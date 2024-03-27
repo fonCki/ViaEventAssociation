@@ -45,7 +45,9 @@ public class Error {
     public static Error InvalidPrefix => new("The UID has an invalid prefix, this probably is an ID from another entity.");
     public static Error EventIsNotFound => new("The event was not found.");
     public static Error InvalidCommand => new("The command is invalid.");
-    public static Error InvalidVisibility => new("The visibility string is invalid.");
+    public static Error GuestIsNotFound => new("The guest was not found.");
+    public static Error GuestAlreadyRegistered => new("The guest is already registered.");
+    public static Error EmailAlreadyUsed => new("The email address is already in use.");
 
     public static Error TooShortName(int minLength) {
         return new Error($"The provided name is too short, minimum length is {minLength} characters.");
@@ -95,6 +97,10 @@ public class Error {
         return new Error($"The duration of the event is too short, minimum duration is {minDuration}.");
     }
 
+    public static Error InvalidMaxGuests(string maxGuests) {
+        return new Error($"The provided maximum number of guests is invalid: {maxGuests}.");
+    }
+
     // Method to convert Exception to a generic Error
     public static Error FromException(Exception exception) {
         return new Error(exception.Message);
@@ -112,7 +118,6 @@ public class Error {
         var error = errors.First();
         // Add the rest of the errors to the chain
         foreach (var e in errors.Skip(1)) error.Append(e);
-
         return error;
     }
 
@@ -147,9 +152,5 @@ public class Error {
 
     public override int GetHashCode() {
         return Message.GetHashCode();
-    }
-
-    public static Error InvalidMaxGuests(string maxGuests) {
-        return new Error($"The provided maximum number of guests is invalid: {maxGuests}.");
     }
 }

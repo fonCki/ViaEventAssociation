@@ -254,7 +254,7 @@ public class Event : AggregateRoot<EventId> {
         if (Participations.FirstOrDefault(p => p.Event == invitation.Event) is null)
             errors.Add(Error.InvitationNotFound);
 
-        if (Participations.FirstOrDefault(p => p.Event == invitation.Event).ParticipationStatus != ParticipationStatus.Accepted)
+        if (Participations.FirstOrDefault(p => p.Event == invitation.Event).ParticipationStatus == ParticipationStatus.Accepted)
             errors.Add(Error.GuestAlreadyParticipating);
 
         if (Status is not EventStatus.Active)
@@ -340,7 +340,7 @@ public class Event : AggregateRoot<EventId> {
     }
 
     public bool IsParticipating(Guest guest) {
-        return Participations.Any(p => p.Guest == guest);
+        return Participations.Any(p => p.Guest == guest && p.ParticipationStatus is ParticipationStatus.Accepted);
     }
 
     public bool IsInvitedButNotConfirmed(Guest guest) {
